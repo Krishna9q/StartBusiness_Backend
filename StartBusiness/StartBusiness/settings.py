@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'user'
+    'user',
+    'contractor'
 ]
 
 MIDDLEWARE = [
@@ -75,12 +76,25 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'mydb',
+        'CLIENT': {
+            'host': 'localhost', # Replace with your MongoDB server address
+            'port': 27017,               # Replace with your MongoDB port if different
+           
+        },
+        
     }
 }
+
 
 
 # Password validation

@@ -5,6 +5,8 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from django.views.generic import TemplateView
 
+
+# 
 get_schema_view = get_schema_view(
     openapi.Info(
         title="StartBusiness ",
@@ -18,6 +20,7 @@ urlpatterns = [
     path('api/',
          include([path('api_schema', get_schema_view.as_view(), name="api_schema"),path('docs/', TemplateView.as_view(template_name='docs.html',extra_context={'schema_url': 'api_schema'}), name='docs'),
              path('user/',include('user.urls')),
+             path('contractor/',include('contractor.urls')),
              
          ]))
 ]
