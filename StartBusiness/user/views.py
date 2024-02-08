@@ -97,7 +97,7 @@ class UserLoginView(GenericAPIView):
    def post (self, request,format=None):
       id = request.data.get('id')
       password = request.data.get('user_password')
-      print(id,password)
+     
       if User.objects.filter(user_email=id).count() >= 1 or User.objects.filter(user_mobile_number=id).count()>=1:
         user =  User.objects.filter(user_email=id) or User.objects.filter(user_mobile_number=id)
         if user[0].is_verify is True:
