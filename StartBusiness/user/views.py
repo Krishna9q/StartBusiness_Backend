@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
-from user.serializers import UserLoginSerializer, UserSerializer
+from user.serializers import UserLoginSerializer, UserSerializer,UserOtpSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password , check_password
 from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+import random
+from datetime import datetime
+import json
+from StartBusiness.email import send_verification_email
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -14,20 +18,40 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
         'refresh': str(refresh)
     }
+def otp_generator(id,data):
+   user = User.objects.get(user_email=id)
+   user.otp_key = data
+   user.save()
 
 class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
-    
+      if User.objects.filter(user_email=request.data.get('user_email')).count() >=1 or User.objects.filter(user_mobile_number=request.data.get('user_mobile_number')).count() >=1:
+          Response.status_code = status.HTTP_400_BAD_REQUEST
+          return Response({
+            'status' : status.HTTP_400_BAD_REQUEST,
+            'message' : "this user is already registerd"
+                      })
+      else:
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
         serializer.save()
+        Response.status_code = status.HTTP_201_CREATED
+        otp = [random.randint(1, 100) for _ in range(4)]
+        d = json.dumps([{'otp': otp, 'timestamp': datetime.now().strftime('%H:%M:%S')}])
+        id = request.data.get('user_email')
+        otp_generator(id, d)
+        send_verification_email(otp, id)
+        # print(random_numbers)
         return Response({
-                 'status': status.HTTP_200_OK
+                 'status': status.HTTP_200_OK,
+                 'message': " User Successfully registered"
                                    })
         
-
+class UserOtpVerificationEmail(GenericAPIView):
+    def post(self, input, request, format=None):
+        pass
 
 
 class UserView(APIView):
@@ -39,7 +63,7 @@ class UserView(APIView):
             if User.objects.filter(user_id=id).count() >= 1:
                 user  = User.objects.get(user_id=id)
                 serializer = UserSerializer(user)
-              
+                Response.status_code = status.HTTP_200_OK
               
                 return Response(
                     {
@@ -49,7 +73,7 @@ class UserView(APIView):
                     }
                 )
             else:
-             
+                Response.status_code = status.HTTP_400_BAD_REQUEST
                 return Response(
                     {
                         'status': status.HTTP_400_BAD_REQUEST,
@@ -59,6 +83,7 @@ class UserView(APIView):
         else:
             user = User.objects.all()    
             serializer = UserSerializer(user, many=True)
+            Response.status_code = status.HTTP_200_OK
             return Response({
                  'status': status.HTTP_200_OK,
                  'message': "user " + 'data retrieved successfully',
@@ -85,6 +110,7 @@ class UserUpdateView(APIView):
                 },
             )
         else:
+            Response.status_code = status.HTTP_400_BAD_REQUEST
             return Response(
                 {
                     'status': status.HTTP_400_BAD_REQUEST,
@@ -105,6 +131,7 @@ class UserLoginView(GenericAPIView):
        
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
+             Response.status_code = status.HTTP_200_OK
              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
@@ -113,15 +140,18 @@ class UserLoginView(GenericAPIView):
               'token': token
                              })
          else:
+             Response.status_code = status.HTTP_400_BAD_REQUEST
              return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"invalid password"
                               })
              
         else:
+                 Response.status_code = status.HTTP_400_BAD_REQUEST
                  return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"user is not verified first verify yor account"
                               })
       else:
+          Response.status_code = status.HTTP_400_BAD_REQUEST
           return Response({
               'status code': status.HTTP_400_BAD_REQUEST,
               'message':"user is not registered with this email or mobile number"         
