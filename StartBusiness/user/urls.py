@@ -8,5 +8,6 @@ urlpatterns = [
     path('view/<uuid:input>/', UserView.as_view(), name = 'user view by id'),
     path('update/<uuid:input>/', UserUpdateView.as_view(), name = 'user update'),
     path('login/', UserLoginView.as_view(), name = 'user login'),
+    path('otp-verification/<uuid:input>/', UserOtpVerificationEmail.as_view(), name = 'user view by id'),
   
 ]

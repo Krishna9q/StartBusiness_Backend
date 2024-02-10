@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*","https://start-business-46u6138wk-amanyadav96s-projects.vercel.app/","https://start-business.vercel.app/","https://start-business-agq8n22nb-amanyadav96s-projects.vercel.app"]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 

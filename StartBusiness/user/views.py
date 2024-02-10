@@ -22,7 +22,24 @@ def otp_generator(id,data):
    user = User.objects.get(user_email=id)
    user.otp_key = data
    user.save()
+   return user.user_id
 
+def magic(numList):         # [1,2,3]
+    s = map(str, numList)   # ['1','2','3']
+    s = ''.join(s)          # '123'
+    s = int(s)              # 123
+    return s
+
+def time_difference(start_time, end_time, time_format='%H:%M:%S'):
+    # Parse the input strings as datetime objects
+    start = datetime.strptime(start_time, time_format)
+    end = datetime.strptime(end_time, time_format)
+    
+    # Calculate the difference
+    time_diff = end - start
+    
+    # Return the difference in seconds
+    return time_diff.seconds/60
 class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
@@ -38,21 +55,56 @@ class UserRegisterView(GenericAPIView):
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
         serializer.save()
         Response.status_code = status.HTTP_201_CREATED
-        otp = [random.randint(1, 100) for _ in range(4)]
-        d = json.dumps([{'otp': otp, 'timestamp': datetime.now().strftime('%H:%M:%S')}])
+        otp = [random.randint(1, 9) for _ in range(4)]
+        otp = magic(otp)
+        d = json.dumps({'otp': otp, 'timestamp': datetime.now().strftime('%H:%M:%S')})
         id = request.data.get('user_email')
-        otp_generator(id, d)
-        send_verification_email(otp, id)
+        user_id = otp_generator(id, d)
+        send_verification_email(otp, id, user_id)
         # print(random_numbers)
         return Response({
                  'status': status.HTTP_200_OK,
-                 'message': " User Successfully registered"
+                 'message': " User Successfully registered",
+                 'user_id': user_id
                                    })
         
 class UserOtpVerificationEmail(GenericAPIView):
-    def post(self, input, request, format=None):
-        pass
-
+    serializer_class = UserOtpSerializer
+    def post(self, request,input= None, format=None):
+        id = input
+        user =  User.objects.get(user_id=id)
+        new_dict = {}
+        new_dict =json.loads(user.otp_key)
+        first_time =new_dict.get('timestamp')
+        second_time = datetime.now().strftime('%H:%M:%S')
+        timed = time_difference(first_time,second_time)
+        print(timed)
+        otp1 = int(request.data.get('otp'))
+        otp2 = int(new_dict.get('otp'))
+        if(timed < 10.0):
+            if(otp1==otp2):
+                user.is_verify = True
+                user.save()
+                return Response({
+                    'status': status.HTTP_200_OK,
+                    "message":"user is verified"
+                })
+            else:
+                Response.status_code = status.HTTP_400_BAD_REQUEST
+                return Response({
+                    'status': status.HTTP_400_BAD_REQUEST,
+                    "message":"invalid otp"
+                })
+        else:
+         Response.status_code = status.HTTP_400_BAD_REQUEST
+         return Response({
+         'status_code': status.HTTP_400_BAD_REQUEST  ,
+         "message":"otp expired"
+     })
+class UserOtpResend(GenericAPIView):
+    def post(self, request,input=None,format=None):
+        id = input
+        user = User.objects.get(user_id=id) 
 
 class UserView(APIView):
     # permission_classes = [IsAuthenticated]

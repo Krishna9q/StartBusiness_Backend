@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['user_email', 'user_mobile_number','user_password','user_role','is_verify']
+        exclude = ('otp_key','created_at')
 class UserLoginSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='user_mobile_number')
     class Meta:
@@ -16,6 +16,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ('id','user_password')
 
 class UserOtpSerializer(serializers.ModelSerializer):
-    class Meta:
+     otp = serializers.CharField(source='otp_key')
+     class Meta:
         model = User
-        fields = ('otp_key')
+        fields = ['otp']
