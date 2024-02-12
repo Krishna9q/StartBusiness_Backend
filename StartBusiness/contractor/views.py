@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import Contractor
-# Create your views here.
+# Create your  views here.
 
 class ContractorRegistorView(generics.GenericAPIView):
     serializer_class = ContractorSerializer
 
-    #Creating Contractor POST
+    #Creating
     def post(self, request,format=None):
         serializer = ContractorSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -20,18 +20,19 @@ class ContractorRegistorView(generics.GenericAPIView):
             'data': serializer.data
         })
 
-    #Get allContractor
+    #FindAll
 class ContractorView(APIView):
 
     def get(self, request, input = None,format=None):
         id = input
+        print(self)
         if id is not None:
             if Contractor.objects.filter(contractor_id=id).count() >=1:
                 contrator = Contractor.objects.get(contractor_id=id)
                 serializer = ContractorSerializer(contrator)
                 return Response({
                     'status':status.HTTP_200_OK,
-                    'message': "Contractor"+"data retrived",
+                    'message': "Contractor data retrived",
                     'data':serializer.data
                 })
             else:
@@ -44,7 +45,7 @@ class ContractorView(APIView):
             serializer = ContractorSerializer(contractor, many=True)
             return Response({
                'status':status.HTTP_200_OK,
-               'message': "Contractor"+"data retrived",
+               'message': "Contractor"+" data retrived",
                 'data':serializer.data
             })
         
@@ -68,4 +69,22 @@ class ContractorUpdateView(APIView):
             return Response({
                'status': status.HTTP_400_BAD_REQUEST,
                'message': 'invalid id',
+            })
+#delete
+class ContratorDeleteView(APIView):
+
+    def delete(self, request, input):
+        id = input
+        print(self)
+        if Contractor.objects.filter(contractor_id=id).count() >= 1:
+            contrator = Contractor.objects.get(contractor_id=id)
+            contrator.delete()
+            return Response({
+             'status': status.HTTP_200_OK,
+              'message': 'Contractor Deleted Successfully' 
+            })
+        else:
+            return Response({
+              'status': status.HTTP_400_BAD_REQUEST,
+              'message': 'invalid id',
             })

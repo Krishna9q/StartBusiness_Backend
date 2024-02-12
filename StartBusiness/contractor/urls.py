@@ -7,5 +7,5 @@ urlpatterns = [
     path('view',ContractorView.as_view(), name = 'Contractor view'),
     path('view/<uuid:input>/',ContractorView.as_view(), name = 'Contractor view'),
     path('update/<uuid:input>/',ContractorUpdateView.as_view(), name = 'Contractor update'),
-    # path('delete/<uuid:input>/',ContractorDeleteView.as_view(), name = 'Contractor delete'),
+    path('delete/<uuid:input>/',ContratorDeleteView.as_view(), name = 'Contractor delete'),
 ]
