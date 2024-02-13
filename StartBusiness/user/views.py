@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password , check_password
 from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 import random
-from datetime import datetime, timezone
+from datetime import datetime
 import json
 from StartBusiness.email import send_verification_email
 
@@ -25,7 +25,7 @@ def get_tokens_for_user(user):
 
 def otp_generator(id):
    otp = random.randint(1000, 9999)
-   d = json.dumps({'otp': otp, 'timestamp': datetime.now((timezone("Asia/Kolkata"))).strftime('%H:%M:%S')})
+   d = json.dumps({'otp': otp, 'timestamp': datetime.now().strftime('%H:%M:%S')})
    user = User.objects.get(user_email=id)
    user.otp_key = d
    user.save()
@@ -76,7 +76,7 @@ class UserOtpVerificationEmail(GenericAPIView):
         new_dict = {}
         new_dict =json.loads(user.otp_key)
         first_time =new_dict.get('timestamp')
-        second_time = datetime.now((timezone("Asia/Kolkata"))).strftime('%H:%M:%S')
+        second_time = datetime.now().strftime('%H:%M:%S')
         timed = time_difference(first_time,second_time)
         print(timed)
         otp1 = int(request.data.get('otp'))
