@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Rubik&display=swap" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        .main{
+            width: 100vw;
+            height: 100%;
+            background-color: #F5F7FA;
+            display: flex;
+            justify-content: center;
+            padding: 7% 0;
+        }
+        .center-box{
+            width: 450px;
+            height: 70%;
+            background-color: white;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .header{
+            height: 10vh;
+            text-align: center;
+            border-bottom: 1px solid #d4d4d4a1;
+            padding: 20px;
+        }
+        img{
+            width: 40%;
+            height: 100%;
+        }
+        .container{
+            padding: 40px 50px;
+        }
+        h2{
+            font-size: 30px;
+        }
+        .number{
+            background-color: #F5F7FA;
+            width: 80%;
+            height: 10vh;
+            margin: 30px auto;
+            border-radius: 10px;
+            color: #FE5D0F;
+             font-size: 40px;
+             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 13px;
+        }
+        .btn{
+            background: transparent;
+            border: none;
+            color: #012561;
+            font-weight: 900;
+            font-size: 16px;
+            text-decoration: underline;
+            margin-top: 10px;
+        }
+        .btn:hover{
+            cursor: pointer;
+        }
+        p{
+            color:#1d1d1d71;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+        .p2{
+            margin-top: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="center-box">
+            <div class="header">
+                 <img src="logo.png" alt="">
+            </div>
+            <div class="container">
+                <h2>Complete Registration</h2>
+                <p>Please Enter this confirmation code in the window whereyou start creating your account</p>
+                <div class="number" id = 'otp'>
+                    
+                 </div>
+               <div class="bottom">
+                 <p>From your device use the code to confirm email.</p>
+                 <p class="p2">If you didn’t create ana account in Sangeeta Marbles, Please ignore this message.</p>
+                 <button class="btn">Go to Signup</button>
+               </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

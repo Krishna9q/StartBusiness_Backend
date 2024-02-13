@@ -9,5 +9,8 @@ class User(models.Model):
     user_password = models.CharField(max_length=225)
     is_verify = models.BooleanField(default=False)
     user_role = models.CharField(max_length=225)
+    otp_key = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+   
     # user_password = str(user_password)
     # user_password= make_password(user_password)

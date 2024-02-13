@@ -21,6 +21,8 @@ urlpatterns = [
          include([path('api_schema', get_schema_view.as_view(), name="api_schema"),path('docs/', TemplateView.as_view(template_name='docs.html',extra_context={'schema_url': 'api_schema'}), name='docs'),
              path('user/',include('user.urls')),
              path('contractor/',include('contractor.urls')),
+             path('manager/',include('manager.urls')),
+
              
-         ]))
+       ]))
 ]
