@@ -1,15 +1,10 @@
-from icalendar import Calendar, Event
-from datetime import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 
 from bs4 import BeautifulSoup
 from pathlib import Path
 
-import requests
 
 smtp_server = "smtp.gmail.com"
 smtp_port = 587
