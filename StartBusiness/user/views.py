@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password , check_password
 from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 import random
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from StartBusiness.email import send_verification_email
 
@@ -50,6 +50,13 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
 class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
+      if User.objects.filter(user_email=request.data.get('user_email')).count() >=1 or User.objects.filter(user_mobile_number=request.data.get('user_mobile_number')).count() >=1:
+          Response.status_code = status.HTTP_400_BAD_REQUEST
+          return Response({
+            'status' : status.HTTP_400_BAD_REQUEST,
+            'message' : "this user is already registerd"
+                      })
+      else:
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
