@@ -8,6 +8,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ('otp_key','created_at')
+
+
 class UserLoginSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='user_mobile_number')
     class Meta:
@@ -15,8 +17,16 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','user_password')
 
+
 class UserOtpSerializer(serializers.ModelSerializer):
      otp = serializers.CharField(source='otp_key')
      class Meta:
         model = User
         fields = ['otp']
+
+
+class ForgetPasswordSerializer(serializers.ModelSerializer):
+     password = serializers.CharField(source='user_password')
+     class Meta:
+        model = User
+        fields = ['password']
