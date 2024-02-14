@@ -26,7 +26,6 @@ def get_tokens_for_user(user):
 def otp_generator(id):
    otp = random.randint(1000, 9999)
    d = json.dumps({'otp': otp, 'timestamp': datetime.now().strftime('%H:%M:%S')})
-   print(id)
    user = User.objects.get(user_email=id)
    user.otp_key = d
    user.save()
@@ -73,6 +72,7 @@ class UserRegisterView(GenericAPIView):
                  'message': " User Successfully registered",
                  'user_id': user_id
                                    })
+
       
 # User Otp-verification view----------------------------------------------------------------
         
