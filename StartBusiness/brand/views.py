@@ -9,7 +9,7 @@ class BrandAddView(generics.GenericAPIView):
     serializer_class = BrandSerializer
     def post(self , request):
         if Brand.objects.filter(brand_name=request.data.get('brand_name')).count() >=1 :
-            return Response({"error":"Brand already exists"},status=406)
+            return Response({"error":"Brand already exists"},status=400)
         else:
             serializer = BrandSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)

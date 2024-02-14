@@ -51,27 +51,23 @@ class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
       if User.objects.filter(user_email=request.data.get('user_email')).count() >=1 or User.objects.filter(user_mobile_number=request.data.get('user_mobile_number')).count() >=1:
-          Response.status_code = status.HTTP_400_BAD_REQUEST
+          
           return Response({
             'status' : status.HTTP_400_BAD_REQUEST,
             'message' : "this user is already registerd"
-                      })
+                      },status=400)
       else:
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
         serializer.save()
-        Response.status_code = status.HTTP_201_CREATED
-       
         id = request.data.get('user_email')
         user_id = otp_generator(id)
-        
-        # print(random_numbers)
         return Response({
                  'status': status.HTTP_201_CREATED,
                  'message': " User Successfully registered",
                  'user_id': user_id
-                                   })
+                                   },status=201)
 
       
 # User Otp-verification view----------------------------------------------------------------
@@ -96,19 +92,19 @@ class UserOtpVerificationEmail(GenericAPIView):
                 return Response({
                     'status': status.HTTP_200_OK,
                     "message":"user is verified"
-                })
+                },status=200)
             else:
                 Response.status_code = status.HTTP_400_BAD_REQUEST
                 return Response({
                     'status': status.HTTP_400_BAD_REQUEST,
                     "message":"invalid otp"
-                })
+                },status=400)
         else:
-         Response.status_code = status.HTTP_400_BAD_REQUEST
+        
          return Response({
          'status_code': status.HTTP_400_BAD_REQUEST  ,
          "message":"otp expired"
-     })
+         },status=400)
 
         
 # User otp-resend view----------------------------------------------------------------
@@ -124,12 +120,12 @@ class UserOtpResend(GenericAPIView):
            email_id = request.query_params.get('email_id')
            print(email_id)
         user_iddd =  otp_generator(email_id)
-        Response.status_code = status.HTTP_200_OK
+       
         return Response({
             'status_code': status.HTTP_200_OK,
             'message':"otp sent successfully",
             'user_id':user_iddd
-          })
+          },status=200)
         
       
         
@@ -152,20 +148,20 @@ class ForgetPassword(GenericAPIView):
             serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
             serializer.save()
 
-            Response.status_code = status.HTTP_200_OK
+           
             return Response(
                 {
                     'status': status.HTTP_200_OK,
                     'message': 'Password Updated Successfully' 
-                },
+                },status=200
             )
          
        else:
-            Response.status_code = status.HTTP_400_BAD_REQUEST
+            
             return Response({
             'status code': status.HTTP_400_BAD_REQUEST,
             'message':"user is not registered with this email."         
-               })
+               },status=400)
 
      
 
@@ -181,32 +177,28 @@ class UserView(APIView):
             if User.objects.filter(user_id=id).count() >= 1:
                 user  = User.objects.get(user_id=id)
                 serializer = UserSerializer(user)
-                Response.status_code = status.HTTP_200_OK
-              
                 return Response(
                     {
                         'status': status.HTTP_200_OK,
                         'message': "user " + 'data retrieved successfully',
                         'data': serializer.data,
-                    }
+                    },status=200
                 )
             else:
-                Response.status_code = status.HTTP_400_BAD_REQUEST
                 return Response(
                     {
                         'status': status.HTTP_400_BAD_REQUEST,
                         'message': "Invalid user id",
-                    },
+                    },status=400
                 )
         else:
             user = User.objects.all()    
             serializer = UserSerializer(user, many=True)
-            Response.status_code = status.HTTP_200_OK
             return Response({
                  'status': status.HTTP_200_OK,
                  'message': "user " + 'data retrieved successfully',
                  'data': serializer.data,
-            })
+            },status=200)
         
 
 # user update view----------------------------------------------------------------
@@ -223,20 +215,18 @@ class UserUpdateView(APIView):
             if request.data.get('user_password') is not None:
              serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
             serializer.save()
-            Response.status_code = status.HTTP_200_OK
             return Response(
                 {
                     'status': status.HTTP_200_OK,
                     'message': 'user Updated Successfully' 
-                },
+                },status=200
             )
         else:
-            Response.status_code = status.HTTP_400_BAD_REQUEST
             return Response(
                 {
                     'status': status.HTTP_400_BAD_REQUEST,
                     'message': 'invalid id',
-                },
+                },status=400
             )
 
 
@@ -254,28 +244,25 @@ class UserLoginView(GenericAPIView):
        
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
-             Response.status_code = status.HTTP_200_OK
              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
               'user id': user[0].user_id,
               'user_role': user[0].user_role,
               'token': token
-                             })
+                             },status=200)
          else:
-             Response.status_code = status.HTTP_400_BAD_REQUEST
              return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"invalid password"
-                              })
+                              },status=400)
              
         else:
-                 Response.status_code = status.HTTP_400_BAD_REQUEST
                  return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"user is not verified first verify yor account"
-                              })
+                              },status=400)
       else:
-          Response.status_code = status.HTTP_400_BAD_REQUEST
+        
           return Response({
               'status code': status.HTTP_400_BAD_REQUEST,
               'message':"user is not registered with this email or mobile number"         
-               })
+               },status=400)
