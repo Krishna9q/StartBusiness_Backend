@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'user',
     'contractor',
     'manager',
-    'brand'
+    'category',
 ]
 
 MIDDLEWARE = [
