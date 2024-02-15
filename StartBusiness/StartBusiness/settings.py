@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'contractor',
     'manager',
+    'category',
 ]
 
 MIDDLEWARE = [
@@ -163,4 +164,5 @@ SIMPLE_JWT = {
 
     "JTI_CLAIM": "jti",
 }
+
 
