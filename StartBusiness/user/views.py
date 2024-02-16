@@ -141,7 +141,7 @@ class ForgetPassword(GenericAPIView):
      def post (self, request,input=None,format=None):
        
        id = request.query_params.get('email_id')
-       if id is None:
+       if id is not None:
             user = User.objects.get(user_email=id)
             
             serializer = ForgetPasswordSerializer(user, data=request.data, partial=True)
