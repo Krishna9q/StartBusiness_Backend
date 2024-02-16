@@ -108,7 +108,8 @@ class UserOtpVerificationEmail(GenericAPIView):
 
         
 # User otp-resend view----------------------------------------------------------------
-class UserOtpResend(GenericAPIView):
+class UserOtpResend(APIView):
+    
     def get(self, request,input=None,format=None):
         id = input
         user_iddd = ""
