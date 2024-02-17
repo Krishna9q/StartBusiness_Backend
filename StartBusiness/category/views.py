@@ -27,7 +27,7 @@ class CategoryRegisterView(generics.GenericAPIView):
         },status=200)
 
 class CategoryView(APIView):
-   queryset = Category.objects.all().order_by('')
+   queryset = Category.objects.all().order_by('created_at')
    serializer_class = CategoryRegisterView
    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
    pagination_class = CustomPagination
@@ -42,7 +42,7 @@ class CategoryView(APIView):
         return Response(
                {
                   'status': status.HTTP_200_OK,
-                  'message': 'Book data retrieved successfully',
+                  'message': 'Category data retrieved successfully',
                   'data': response.data
                },status=200
             )
