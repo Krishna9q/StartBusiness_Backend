@@ -5,6 +5,11 @@ from .models import Category
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from StartBusiness.custom_paginations import CustomPagination
+from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 # Create your views here.
 
@@ -22,33 +27,45 @@ class CategoryRegisterView(generics.GenericAPIView):
         },status=200)
 
 class CategoryView(APIView):
+   queryset = Category.objects.all().order_by('')
+   serializer_class = CategoryRegisterView
+   filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
+   pagination_class = CustomPagination
+   filterset_fields = []
+   ordering_fields = []
+   search_fields = []
+  
+   def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+ 
+           
+        return Response(
+               {
+                  'status': status.HTTP_200_OK,
+                  'message': 'Book data retrieved successfully',
+                  'data': response.data
+               },status=200
+            )
+class CategoryViewById(APIView):
     
     def get(self,request, input = None,format=None):
         id = input
-        if id is not None:
-            if Category.objects.filter(category_id=id).count()>=1:
-                category = Category.objects.get(category_id=id)
-                serializer = CategorySerializer(category)
-                return Response({
-                 'status':status.HTTP_200_OK,
-                 'message': "Category data retrived",
-                 'data':serializer.data
-                },status=200)
-            else:
-                return Response({
-                  'status':status.HTTP_400_BAD_REQUEST,
-                  'message': "Invalid Category id"
-                },
-                status=400)
-        else:
-            category = Category.objects.all()
-            serializer = CategorySerializer(category, many=True)
-           
+        
+        if Category.objects.filter(category_id=id).count()>=1:
+            category = Category.objects.get(category_id=id)
+            serializer = CategorySerializer(category)
             return Response({
-             'status':status.HTTP_200_OK,
-             'message': "Category data retrived",
-             'data':serializer.data
+                'status':status.HTTP_200_OK,
+                'message': "Category data retrived",
+                'data':serializer.data
             },status=200)
+        else:
+            return Response({
+                'status':status.HTTP_400_BAD_REQUEST,
+                'message': "Invalid Category id"
+            },
+            status=400)
+       
         
 class CategoryUpdateView(APIView):
     serialier_class = CategorySerializer
@@ -91,3 +108,6 @@ class CategoryDeleteView(APIView):
              'message': 'invalid Category_id',
             },
             status=400)
+        
+
+        
