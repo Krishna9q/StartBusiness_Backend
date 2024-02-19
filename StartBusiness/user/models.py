@@ -9,7 +9,7 @@ class User(models.Model):
     user_name = models.CharField(max_length=225 , default=None)
     user_password = models.CharField(max_length=225)
     is_verify = models.BooleanField(default=False)
-    user_role = models.CharField(max_length=225)
+    user_role = models.CharField(max_length=225 , default='customer')
     otp_key = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
    
