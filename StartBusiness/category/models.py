@@ -7,5 +7,5 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    category_image = models.ImageField(upload_to='brand/')
+    category_image = models.ImageField(upload_to='category/',default=None) 
     
