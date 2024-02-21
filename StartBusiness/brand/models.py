@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from dealer.models import Dealer
 from category.models import Category
 
 class Brand(models.Model):
@@ -8,8 +9,9 @@ class Brand(models.Model):
     brand_logo = models.ImageField(upload_to= 'brand/')
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category,default=uuid.uuid4,on_delete=models.CASCADE)
+    dealer = models.ForeignKey(Dealer,default=uuid.uuid4,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at =models.DateField(auto_now=True)
-    
+
 
     
