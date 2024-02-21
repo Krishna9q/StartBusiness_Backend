@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'manager',
     'category',
     'brand',
+    'dealer'
 ]
 
 MIDDLEWARE = [
