@@ -10,5 +10,6 @@ class Brand(models.Model):
     category = models.ForeignKey(Category,default=uuid.uuid4,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at =models.DateField(auto_now=True)
+    
 
     
