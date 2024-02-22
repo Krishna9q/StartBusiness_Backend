@@ -10,10 +10,12 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create your views here.
 
 class CategoryRegisterView(GenericAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = CategorySerializer
     def post(self, request,format=None):
         serializer = CategorySerializer(data=request.data)
@@ -29,12 +31,8 @@ class CategoryRegisterView(GenericAPIView):
 class CategoryView(ListAPIView):
    queryset = Category.objects.all().order_by('created_at')
    serializer_class = CategorySerializer
-   filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
    pagination_class = CustomPagination
-   filterset_fields = ['is_active']
-   ordering_fields = ['created_at']
-   search_fields = ['is_active','category_name','category_id']
-  
+   
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
  
