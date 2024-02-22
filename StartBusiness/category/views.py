@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework.generics import GenericAPIView , ListAPIView
 from category.serializers import CategorySerializer
 from .models import Category
 from rest_framework.response import Response
@@ -13,7 +13,7 @@ from rest_framework.filters import SearchFilter
 
 # Create your views here.
 
-class CategoryRegisterView(generics.GenericAPIView):
+class CategoryRegisterView(GenericAPIView):
     serializer_class = CategorySerializer
     def post(self, request,format=None):
         serializer = CategorySerializer(data=request.data)
@@ -26,14 +26,14 @@ class CategoryRegisterView(generics.GenericAPIView):
             'data': serializer.data
         },status=200)
 
-class CategoryView(APIView):
+class CategoryView(ListAPIView):
    queryset = Category.objects.all().order_by('created_at')
-   serializer_class = CategoryRegisterView
+   serializer_class = CategorySerializer
    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
    pagination_class = CustomPagination
-   filterset_fields = []
-   ordering_fields = []
-   search_fields = []
+   filterset_fields = ['is_active']
+   ordering_fields = ['created_at']
+   search_fields = ['is_active','category_name','category_id']
   
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
