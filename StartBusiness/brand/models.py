@@ -4,7 +4,7 @@ from dealer.models import Dealer
 from category.models import Category
 
 class Brand(models.Model):
-    brand_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,unique = True)
+    brand_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     brand_name = models.CharField(max_length=225)
     brand_logo = models.ImageField(upload_to= 'brand/')
     is_active = models.BooleanField(default=True)

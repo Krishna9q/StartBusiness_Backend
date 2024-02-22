@@ -1,11 +1,11 @@
-from rest_framework import generics
+from rest_framework.generics import GenericAPIView
 from brand.models import Brand
 from brand.serializers import BrandSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # add brand
-class BrandAddView(generics.GenericAPIView):
+class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
     def post(self , request):
         if Brand.objects.filter(brand_name=request.data.get('brand_name')).count() >=1 :
