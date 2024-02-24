@@ -10,14 +10,16 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
-# Create your views here.
+from StartBusiness.s3_image_config import upload_base64_file
 
 class CategoryRegisterView(generics.GenericAPIView):
     serializer_class = CategorySerializer
     def post(self, request,format=None):
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        file = request.data.get('category_image')
+        data=upload_base64_file(file,'category/')
+        serializer.validated_data['category_image']= data
         serializer.save()
 
         return Response({
