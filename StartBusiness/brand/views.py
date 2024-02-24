@@ -1,24 +1,28 @@
-from rest_framework import generics
+from rest_framework.generics import GenericAPIView
 from brand.models import Brand
 from brand.serializers import BrandSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework import status
+from StartBusiness.s3_image_config import upload_base64_file
 # add brand
-class BrandAddView(generics.GenericAPIView):
+class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
     def post(self , request):
         if Brand.objects.filter(brand_name=request.data.get('brand_name')).count() >=1 :
-            return Response({"error":"Brand already exists"},status=400)
+            return Response({"error":"Brand already exists"},status=status.HTTP_208_ALREADY_REPORTED)
         else:
             serializer = BrandSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            file = request.data.get('brand_logo')
+            data=upload_base64_file(file,'brand/')
+            serializer.validated_data['brand_logo']= data
             serializer.save()
 
             return Response({
             "status" :"success",
             "message":"Brand is added successfully",
-            }, status=201
+            }, status=status.HTTP_201_CREATED
             )
 
 
@@ -39,7 +43,7 @@ class BrandView(APIView):
                         'status': 'success',
                         'message': "brand " + 'data retrieved successfully',
                         'data': serializer.data,
-                    }, status=200
+                    }, status=status.HTTP_200_OK
                 )
             else:
              
@@ -48,7 +52,7 @@ class BrandView(APIView):
                         'status':  'error',
                         'message': "brand not found",
                     },
-                    status=404
+                    status=status.HTTP_404_NOT_FOUND
                 )
         else:
             brand = Brand.objects.all()    
@@ -57,7 +61,7 @@ class BrandView(APIView):
                  'status': 'success',
                  'message': "brand " + 'data retrieved successfully',
                  'data': serializer.data,
-            }, status=200)
+            }, status=status.HTTP_200_OK)
     
 # update brand
 class UpdateBrandView(APIView):
@@ -72,11 +76,11 @@ class UpdateBrandView(APIView):
             return Response({
              'status': 'success',
              'message': "brand updated successfully"
-        },status=200)
+        },status=status.HTTP_200_OK)
         else:
             return Response({
                 'status':'brand id not found'
-        },status=404)
+        },status=status.HTTP_404_NOT_FOUND)
      
        
 # delete brand
@@ -89,12 +93,12 @@ class DeleteBrandView(APIView):
             return Response({
             'status': 'success',
             'message': "brand deleted successfully"
-        }, status=200)
+        }, status=status.HTTP_200_OK)
         else:
             return Response({
                 'status': 'failure',
                 'message': "No such brand id exists for delete."
-                }, status=404)
+                }, status=status.HTTP_404_NOT_FOUND)
     
 
 

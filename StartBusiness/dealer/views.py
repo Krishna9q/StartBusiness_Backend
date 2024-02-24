@@ -1,11 +1,11 @@
-from rest_framework import generics
+from rest_framework.generics import GenericAPIView
 from dealer.models import Dealer
 from dealer.serializers import DealerSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # add dealer
-class DealerAddView(generics.GenericAPIView):
+class DealerAddView(GenericAPIView):
     serializer_class = DealerSerializer
     def post(self , request):
             serializer = DealerSerializer(data=request.data)

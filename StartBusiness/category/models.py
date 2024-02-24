@@ -7,5 +7,5 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    category_image = models.ImageField(_('image'),upload_to='category/',default=None) 
+    category_image = models.TextField(blank=True)  # Image Field to store image of the product in base
     
