@@ -13,21 +13,23 @@ from rest_framework.filters import SearchFilter
 from StartBusiness.s3_image_config import upload_base64_file
 
 class CategoryRegisterView(GenericAPIView):
-  
     serializer_class = CategorySerializer
     def post(self, request,format=None):
+       if Category.objects.filter(category_name=request.data.get('category_name')).count() >=1:
+           return Response({"message":"Category already exists"}
+                           ,status=status.HTTP_400_BAD_REQUEST)
+       else:
         serializer = CategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         file = request.data.get('category_image')
-        data=upload_base64_file(file,'category/')
+        data=upload_base64_file(file,'category')
         serializer.validated_data['category_image']= data
         serializer.save()
-
         return Response({
             'status':status.HTTP_201_CREATED,
             "msg":'Category Registered',
             'data': serializer.data
-        },status=200)
+        },status=201)
 
 class CategoryView(ListAPIView):
    queryset = Category.objects.all().order_by('created_at')
