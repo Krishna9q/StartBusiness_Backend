@@ -82,7 +82,6 @@ class UserOtpVerificationEmail(GenericAPIView):
         first_time =new_dict.get('timestamp')
         second_time = datetime.now().strftime('%H:%M:%S')
         timed = time_difference(first_time,second_time)
-        print(timed)
         otp1 = int(request.data.get('otp'))
         otp2 = int(new_dict.get('otp'))
         if(timed < 10.0):
@@ -258,9 +257,11 @@ class UserLoginView(GenericAPIView):
                               },status=400)
              
         else:
+                 otp_generator(user[0].user_email)
                  return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"user is not verified first verify yor account",
-                              'is_verify': user[0].is_verify
+                              'is_verify': user[0].is_verify,
+                              'user_id': user[0].user_id
                               },status=400)
       else:
         
