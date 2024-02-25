@@ -15,7 +15,7 @@ class BrandAddView(GenericAPIView):
             serializer = BrandSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             file = request.data.get('brand_logo')
-            data=upload_base64_file(file,'brand/')
+            data=upload_base64_file(file,'brand')
             serializer.validated_data['brand_logo']= data
             serializer.save()
 

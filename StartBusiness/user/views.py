@@ -248,7 +248,7 @@ class UserLoginView(GenericAPIView):
              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
-              'user id': user[0].user_id,
+              'user_id': user[0].user_id,
               'user_role': user[0].user_role,
               'token': token
                              },status=200)
