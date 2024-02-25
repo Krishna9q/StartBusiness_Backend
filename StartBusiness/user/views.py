@@ -259,7 +259,8 @@ class UserLoginView(GenericAPIView):
              
         else:
                  return Response({'status': status.HTTP_400_BAD_REQUEST,
-                              'message':"user is not verified first verify yor account"
+                              'message':"user is not verified first verify yor account",
+                              'is_verify': user[0].is_verify
                               },status=400)
       else:
         
