@@ -262,7 +262,7 @@ class UserLoginView(GenericAPIView):
                               'message':"user is not verified first verify yor account",
                               'is_verify': user[0].is_verify,
                               'user_id': user[0].user_id
-                              },status=400)
+                              },status=401)
       else:
         
           return Response({
