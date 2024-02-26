@@ -3,6 +3,7 @@ from dealer.models import Dealer
 from dealer.serializers import DealerSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from StartBusiness.s3_image_config import upload_base64_file
 
 # add dealer
 class DealerAddView(GenericAPIView):
@@ -10,6 +11,10 @@ class DealerAddView(GenericAPIView):
     def post(self , request):
             serializer = DealerSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            file = request.data.get('dealer_image')
+            data=upload_base64_file(file,'brand')
+            serializer.validated_data['dealer_image']= data
+            serializer.save()
             serializer.save()
 
             return Response({
@@ -59,18 +64,21 @@ class DealerView(APIView):
 # update dealer
 class UpdateDealerView(APIView):
     def patch(self, request, input, format=None):
-        _id = input
-        print(_id)
+      _id = input
+      if _id is not None: 
         dealer = Dealer.objects.get(dealer_id=_id)
         serializer = DealerSerializer(dealer, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        if _id is not None:
-            serializer.save()
-            return Response({
+        if(request.data.get('dealer_image')is not None):
+            file = request.data.get('dealer_image')
+            data=upload_base64_file(file,'brand')
+            serializer.validated_data['dealer_image']= data
+        serializer.save()
+        return Response({
              'status': 'success',
              'message': "dealer updated successfully"
         },status=200)
-        else:
+      else:
             return Response({
                 'status':'dealer id not found'
         },status=404)

@@ -66,18 +66,23 @@ class BrandView(APIView):
 # update brand
 class UpdateBrandView(APIView):
     def patch(self, request, input, format=None):
-        _id = input
-        print(_id)
+       _id = input
+       if _id is not None:
         brand = Brand.objects.get(brand_id=_id)
         serializer = BrandSerializer(brand, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        if _id is not None:
-            serializer.save()
-            return Response({
+        if request.data.get('brand_logo') is not None:
+           file = request.data.get('brand_logo')
+           data=upload_base64_file(file,'brand')
+           serializer.validated_data['brand_logo']= data
+        
+        
+        serializer.save()
+        return Response({
              'status': 'success',
              'message': "brand updated successfully"
         },status=status.HTTP_200_OK)
-        else:
+       else:
             return Response({
                 'status':'brand id not found'
         },status=status.HTTP_404_NOT_FOUND)

@@ -76,12 +76,16 @@ class CategoryUpdateView(APIView):
            category = Category.objects.get(category_id=id)
            serializer = CategorySerializer(category, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
+           if request.data.get('category_image') is not None:
+               file = request.data.get('category_image')
+               data=upload_base64_file(file,'category')
+               serializer.validated_data['category_image']= data
            serializer.save()
 
            return Response({
                 'status': status.HTTP_200_OK,
                 'data': serializer.data,
-                'message': 'Contractor Updated Successfully'  
+                'message': 'category Updated Successfully'  
                 },status=200)
         else:
             return Response({
