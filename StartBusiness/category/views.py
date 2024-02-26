@@ -32,7 +32,7 @@ class CategoryRegisterView(GenericAPIView):
         },status=201)
 
 class CategoryView(ListAPIView):
-   queryset = Category.objects.all().order_by('created_at')
+   queryset = Category.objects.all().order_by('-created_at')
    serializer_class = CategorySerializer
    pagination_class = CustomPagination
    
