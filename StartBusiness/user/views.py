@@ -236,7 +236,7 @@ class UserLoginView(GenericAPIView):
    def post (self, request,format=None):
       id = request.data.get('id')
       password = request.data.get('user_password')
-     
+      is_verify = None
       if User.objects.filter(user_email=id).count() >= 1 or User.objects.filter(user_mobile_number=id).count()>=1:
         user =  User.objects.filter(user_email=id) or User.objects.filter(user_mobile_number=id)
         if user[0].is_verify is True:
@@ -267,5 +267,6 @@ class UserLoginView(GenericAPIView):
         
           return Response({
               'status code': status.HTTP_400_BAD_REQUEST,
-              'message':"user is not registered with this email or mobile number"         
+              'message':"user is not registered with this email or mobile number"  ,
+              'is_verify': is_verify       
                },status=400)
