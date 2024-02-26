@@ -1,10 +1,15 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView,ListAPIView
 from brand.models import Brand
 from brand.serializers import BrandSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from StartBusiness.s3_image_config import upload_base64_file
+from StartBusiness.custom_paginations import CustomPagination
+from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 # add brand
 class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
@@ -27,12 +32,27 @@ class BrandAddView(GenericAPIView):
 
 
 # get all brands and get one brand by id
+class BrandAllView(ListAPIView):
+    queryset = Brand.objects.all().order_by('created_at')
+    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
+    pagination_class = CustomPagination
+    serializer_class = BrandSerializer
+    filterset_fields = ['category','dealer','is_active']
+    ordering_fields = ['created_at']
+    search_fields = ['category','dealer','is_active']
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        
+        return Response({
+            'status':status.HTTP_200_OK,
+            "message":'brand data retrieved successfully ',
+            'data':response.data
+        },status=200)
 
 class BrandView(APIView):
     def get(self, request, input=None, format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
+            _id = input
+      
             if Brand.objects.filter(brand_id=_id).count() > 0:
                 brand  = Brand.objects.get(brand_id=_id)
                 serializer = BrandSerializer(brand)
@@ -54,14 +74,7 @@ class BrandView(APIView):
                     },
                     status=status.HTTP_404_NOT_FOUND
                 )
-        else:
-            brand = Brand.objects.all()    
-            serializer = BrandSerializer(brand, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "brand " + 'data retrieved successfully',
-                 'data': serializer.data,
-            }, status=status.HTTP_200_OK)
+  
     
 # update brand
 class UpdateBrandView(APIView):
