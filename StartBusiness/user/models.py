@@ -45,7 +45,7 @@ class User(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         return True
 
-    @property
+    # @property
    
     
     def save(self, *args, **kwargs):     
