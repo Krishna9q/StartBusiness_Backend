@@ -152,6 +152,9 @@ SWAGGER_SETTINGS = {
         },
     },
 }
+AUTH_USER_MODEL = 'user.User'
+
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(minutes=60),

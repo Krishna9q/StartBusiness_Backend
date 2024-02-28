@@ -15,7 +15,7 @@ class DealerAddView(GenericAPIView):
             data=upload_base64_file(file,'brand')
             serializer.validated_data['dealer_image']= data
             serializer.save()
-            serializer.save()
+         
 
             return Response({
             "status" :"success",

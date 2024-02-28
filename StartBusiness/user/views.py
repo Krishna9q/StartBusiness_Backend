@@ -5,12 +5,13 @@ from user.serializers import UserLoginSerializer, UserSerializer,UserOtpSerializ
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password , check_password
-from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
 import random
 from datetime import datetime, timezone
 import json
 from StartBusiness.email import send_verification_email
+from user.models import User
 
 
 # basic used functions ......
@@ -169,7 +170,7 @@ class ForgetPassword(GenericAPIView):
 
 
 class UserView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, input=None, format=None):
         id = input
