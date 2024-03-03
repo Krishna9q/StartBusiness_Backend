@@ -37,7 +37,7 @@ class BrandAllView(ListAPIView):
     filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
     pagination_class = CustomPagination
     serializer_class = BrandSerializer
-    filterset_fields = ['category','dealer','is_active']
+    filterset_fields = ['category','dealer','is_active','brand_name']
     ordering_fields = ['created_at']
     search_fields = ['category','dealer','is_active']
     def list(self, request, *args, **kwargs):
