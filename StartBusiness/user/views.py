@@ -53,7 +53,6 @@ class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
       if User.objects.filter(user_email=request.data.get('user_email')).count() >=1 or User.objects.filter(user_mobile_number=request.data.get('user_mobile_number')).count() >=1:
-          
           return Response({
             'status' : status.HTTP_400_BAD_REQUEST,
             'message' : "this user is already registerd"
