@@ -5,13 +5,14 @@ from user.serializers import UserLoginSerializer, UserSerializer,UserOtpSerializ
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password , check_password
+from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
 import random
 from datetime import datetime, timezone
 import json
+from .customepermission import IsManager
+from rest_framework.permissions import IsAuthenticated
 from StartBusiness.email import send_verification_email
-from user.models import User
 
 
 # basic used functions ......
@@ -170,7 +171,7 @@ class ForgetPassword(GenericAPIView):
 
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsManager]
 
     def get(self, request, input=None, format=None):
         id = input
@@ -237,7 +238,7 @@ class UserLoginView(GenericAPIView):
    def post (self, request,format=None):
       id = request.data.get('id')
       password = request.data.get('user_password')
-      is_verify = None
+     
       if User.objects.filter(user_email=id).count() >= 1 or User.objects.filter(user_mobile_number=id).count()>=1:
         user =  User.objects.filter(user_email=id) or User.objects.filter(user_mobile_number=id)
         if user[0].is_verify is True:
@@ -263,11 +264,10 @@ class UserLoginView(GenericAPIView):
                               'message':"user is not verified first verify yor account",
                               'is_verify': user[0].is_verify,
                               'user_id': user[0].user_id
-                              },status=401)
+                              },status=400)
       else:
         
           return Response({
               'status code': status.HTTP_400_BAD_REQUEST,
-              'message':"user is not registered with this email or mobile number"  ,
-              'is_verify': is_verify       
+              'message':"user is not registered with this email or mobile number"         
                },status=400)
