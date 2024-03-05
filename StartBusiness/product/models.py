@@ -7,8 +7,8 @@ class Product (models.Model):
     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product_name = models.CharField(max_length = 200)
     description  = models.CharField(max_length = 220)
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
+    # category = models.ForeignKey(Category,default= uuid.uuid4,on_delete=models.CASCADE)
+    # brand = models.ForeignKey(Brand,default=uuid.uuid4,on_delete=models.CASCADE)
     sku =  models.CharField(max_length=50,unique = True)
     country = models.CharField(max_length=50)
     
