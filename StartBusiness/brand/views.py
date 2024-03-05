@@ -43,6 +43,7 @@ class BrandAllView(ListAPIView):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         
+        
         return Response({
             'status':status.HTTP_200_OK,
             "message":'brand data retrieved successfully ',

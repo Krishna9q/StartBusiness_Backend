@@ -23,7 +23,7 @@ class User(AbstractBaseUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_email = models.EmailField(max_length=225, unique=True)
     user_mobile_number = models.CharField(max_length=225)
-    user_name = models.CharField(max_length=225 , default=None)
+    user_name = models.CharField(max_length=225)
     user_password = models.CharField(max_length=225)
     is_verify = models.BooleanField(default=False)
     user_role = models.CharField(max_length=225 , default='customer')
@@ -52,5 +52,4 @@ class User(AbstractBaseUser):
         # self.user_password = make_password(self.user_password)
   
         super(User, self).save(*args, **kwargs)
-    # user_password = str(user_password)
-    # user_password= make_password(user_password)
+    
