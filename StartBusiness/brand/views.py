@@ -1,4 +1,5 @@
 from rest_framework.generics import GenericAPIView,ListAPIView
+from StartBusiness.filter import BrandFilter
 from brand.models import Brand
 from brand.serializers import BrandSerializer
 from rest_framework.response import Response
@@ -40,6 +41,7 @@ class BrandAllView(ListAPIView):
     filterset_fields = ['category','dealer','is_active','brand_name']
     ordering_fields = ['created_at']
     search_fields = ['category','dealer','is_active']
+    filterset_class = BrandFilter
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         
