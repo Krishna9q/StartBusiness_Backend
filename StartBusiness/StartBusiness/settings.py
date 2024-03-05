@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'manager',
     'category',
     'brand',
-    'dealer'
+    'dealer',
+    'product'
 ]
 
 MIDDLEWARE = [
@@ -76,13 +77,23 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'startbusiness',
+#         'CLIENT': {
+#             'host': 'mongodb+srv://aman:aman@cluster0.th0tbxg.mongodb.net/?retryWrites=true&w=majority',
+#         },
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'startbusiness',
-        'CLIENT': {
-            'host': 'mongodb+srv://aman:aman@cluster0.th0tbxg.mongodb.net/?retryWrites=true&w=majority',
-        },
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mydb',
+        'USER': 'Krishna_Sadhu',
+        'PASSWORD': '147852369',
+        'HOST': 'mydatabase.c9i6acsg8l0l.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 

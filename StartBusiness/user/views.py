@@ -44,8 +44,6 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
 
 
 
-
-
 # views code .................
 
 # User register view --------------------------------
