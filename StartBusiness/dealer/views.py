@@ -36,9 +36,9 @@ class DealerAddView(GenericAPIView):
 
 class DealerView(APIView):
     def get(self, request, input=None, format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
+            _id = input
+            print(_id)
+      
             if Dealer.objects.filter(dealer_id=_id).count() > 0:
                 dealer  = Dealer.objects.get(dealer_id=_id)
                 serializer = DealerSerializer(dealer)
@@ -60,14 +60,7 @@ class DealerView(APIView):
                     },
                     status=404
                 )
-        else:
-            dealer = Dealer.objects.all()    
-            serializer = DealerSerializer(dealer, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "dealer " + 'data retrieved successfully',
-                 'data': serializer.data,
-            }, status=200)
+    
     
 # update dealer
 class UpdateDealerView(APIView):
