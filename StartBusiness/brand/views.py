@@ -8,7 +8,6 @@ from rest_framework import status
 from StartBusiness.s3_image_config import upload_base64_file
 from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
-from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 # add brand
@@ -35,10 +34,9 @@ class BrandAddView(GenericAPIView):
 # get all brands and get one brand by id
 class BrandAllView(ListAPIView):
     queryset = Brand.objects.all().order_by('created_at')
-    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
+    filter_backends = [OrderingFilter, SearchFilter,DjangoFilterBackend]
     pagination_class = CustomPagination
     serializer_class = BrandSerializer
-    filterset_fields = ['category','dealer','is_active','brand_name']
     ordering_fields = ['created_at']
     search_fields = ['category','dealer','is_active']
     filterset_class = BrandFilter

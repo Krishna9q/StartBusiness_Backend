@@ -1,10 +1,14 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView,ListAPIView
+from dealer.filter import DealerFilter
 from dealer.models import Dealer
 from dealer.serializers import DealerSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from StartBusiness.s3_image_config import upload_base64_file
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+
+
 
 # add dealer
 class DealerAddView(GenericAPIView):
@@ -31,14 +35,25 @@ class DealerAddView(GenericAPIView):
             }, status=201
             )
 
-
 # get all dealer and get one dealer by id
+class DealerAllView(ListAPIView):
+    queryset = Dealer.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    serializer_class = DealerSerializer
+    filterset_class = DealerFilter
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response({
+            'status':status.HTTP_200_OK,
+            "message":'dealer data retrieved successfully ',
+            'data':response.data
+        },status=200)
 
+# get one dealer by id
 class DealerView(APIView):
     def get(self, request, input=None, format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
+            _id = input
+      
             if Dealer.objects.filter(dealer_id=_id).count() > 0:
                 dealer  = Dealer.objects.get(dealer_id=_id)
                 serializer = DealerSerializer(dealer)
@@ -49,7 +64,7 @@ class DealerView(APIView):
                         'status': 'success',
                         'message': "dealer " + 'data retrieved successfully',
                         'data': serializer.data,
-                    }, status=200
+                    }, status=status.HTTP_200_OK
                 )
             else:
              
@@ -58,17 +73,9 @@ class DealerView(APIView):
                         'status':  'error',
                         'message': "dealer not found",
                     },
-                    status=404
-                )
-        else:
-            dealer = Dealer.objects.all()    
-            serializer = DealerSerializer(dealer, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "dealer " + 'data retrieved successfully',
-                 'data': serializer.data,
-            }, status=200)
-    
+                    status=status.HTTP_404_NOT_FOUND
+                )   
+
 # update dealer
 class UpdateDealerView(APIView):
     def patch(self, request, input, format=None):
