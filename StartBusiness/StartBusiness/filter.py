@@ -13,7 +13,7 @@ class BrandFilter(FilterSet):
 
     class Meta:
         model = Brand
-        fields = ['brand_name','category', 'is_active']
+        fields = ['brand_name', 'is_active','category','dealer']
         
                 
       
