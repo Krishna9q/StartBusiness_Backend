@@ -77,15 +77,31 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# Mongodb
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'djongo',
-#         'NAME': 'startbusiness',
+#         'NAME': 'sb',
 #         'CLIENT': {
-#             'host': 'mongodb+srv://aman:aman@cluster0.th0tbxg.mongodb.net/?retryWrites=true&w=majority',
+#             # 'host': 'mongodb+srv://aman:aman@cluster0.th0tbxg.mongodb.net/?retryWrites=true&w=majority',
+#             'host': 'localhost',
 #         },
 #     }
 # }
+# postgres localhost
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'sb',
+#         'USER': 'postgres',
+#         'PASSWORD': 'krishna',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+
+# Postgre AWS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
