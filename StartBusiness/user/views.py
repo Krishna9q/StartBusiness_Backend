@@ -109,23 +109,44 @@ class UserOtpVerificationEmail(GenericAPIView):
 class UserOtpResend(APIView):
     
     def get(self, request,input=None,format=None):
-        id = input
-        user_iddd = ""
-        email_id = ""
-        if id is not None:
+      id = input
+      email_id = ""
+      user_iddd = ""
+      if  id is not None:
+       if User.objects.filter(user_id=id).count()>=1:
            user = User.objects.get(user_id=id)
            email_id = user.user_email
-        else:
-           email_id = request.query_params.get('email_id')
-           print(email_id)
-        user_iddd =  otp_generator(email_id)
+           user_iddd =  otp_generator(email_id)
+           return Response({
+            'status_code': status.HTTP_200_OK,
+            'message':"otp sent successfully",
+            'user_id':user_iddd},status=200)
+       else:
+             return Response({
+              'status':status.HTTP_200_OK,
+              'message':'user is not registered with this id'
+          })
        
-        return Response({
+      elif request.query_params.get('email_id') is not None:
+        if User.objects.filter(user_email=request.query_params.get('email_id')).count()>=1:
+          email_id = request.query_params.get('email_id')
+          user_iddd =  otp_generator(email_id)
+          return Response({
             'status_code': status.HTTP_200_OK,
             'message':"otp sent successfully",
             'user_id':user_iddd
           },status=200)
+        else:
+         return Response({
+              'status':status.HTTP_400_BAD_REQUEST,
+              'message':'user is not registered with this id'
+          },status=400)
         
+      else:  
+          return Response({
+              'status':status.HTTP_400_BAD_REQUEST,
+              'message':'user is not registered with this id'
+          },status=400)
       
         
         
