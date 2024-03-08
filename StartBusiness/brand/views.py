@@ -14,9 +14,6 @@ from rest_framework.filters import SearchFilter
 class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
     def post(self , request):
-        if Brand.objects.filter(brand_name=request.data.get('brand_name')).count() >=1 :
-            return Response({"error":"Brand already exists"},status=status.HTTP_208_ALREADY_REPORTED)
-        else:
             serializer = BrandSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             file = request.data.get('brand_logo')

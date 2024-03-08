@@ -3,7 +3,7 @@ import uuid
 from django.utils.translation import gettext_lazy as _
 class Category(models.Model):
     category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    category_name = models.CharField(max_length=225)
+    category_name = models.CharField(max_length=225,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now_add=True)

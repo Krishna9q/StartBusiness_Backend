@@ -50,12 +50,6 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
 class UserRegisterView(GenericAPIView):
     serializer_class = UserSerializer
     def post(self, request , format=None):
-      if User.objects.filter(user_email=request.data.get('user_email')).count() >=1 or User.objects.filter(user_mobile_number=request.data.get('user_mobile_number')).count() >=1:
-          return Response({
-            'status' : status.HTTP_400_BAD_REQUEST,
-            'message' : "this user is already registerd"
-                      },status=400)
-      else:
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
