@@ -1,7 +1,7 @@
 from rest_framework.generics import GenericAPIView,ListAPIView
 from StartBusiness.filter import BrandFilter
 from brand.models import Brand
-from brand.serializers import BrandSerializer
+from brand.serializers import BrandSerializer,DealerViewAccordingBrand
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -10,6 +10,7 @@ from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from dealer.models import Dealer
 # add brand
 class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
@@ -118,3 +119,14 @@ class DeleteBrandView(APIView):
     
 
 
+class DealerViewAccordingBrand(GenericAPIView):
+    serializer_class = DealerViewAccordingBrand
+   
+    def post(self, request, format=None):
+        lits = request.data
+        print(lits)
+        return Response({
+            'status':'success',
+            "message":"data retrives successfully"
+
+        },status=200)
