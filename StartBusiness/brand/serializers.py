@@ -6,8 +6,7 @@ class BrandSerializer(serializers.ModelSerializer):
         model = Brand
         fields = '__all__'
 
-class DealerViewAccordingBrand(serializers.ModelSerializer):
-    Dealer = serializers.ListField()
-    class Meta:
+class DealerViewAccordingBrandSerializer(serializers.ModelSerializer):
+     class Meta:
         model = Brand
-        fields = ['Dealer']
+        fields = ['dealer']

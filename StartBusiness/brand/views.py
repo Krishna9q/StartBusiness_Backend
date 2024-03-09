@@ -1,7 +1,7 @@
 from rest_framework.generics import GenericAPIView,ListAPIView
 from StartBusiness.filter import BrandFilter
 from brand.models import Brand
-from brand.serializers import BrandSerializer,DealerViewAccordingBrand
+from brand.serializers import BrandSerializer,DealerViewAccordingBrandSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -11,8 +11,16 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from dealer.models import Dealer
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import BaseParser , JSONParser
+import json
+from dealer.serializers import DealerSerializer
 # add brand
+class ListParser(BaseParser):
+    def parse(self, stream, media_type=None, parser_context=None):
+        data = json.load(stream)
+        return data
+
+# parser_classes = [ListParser]
 class BrandAddView(GenericAPIView):
     serializer_class = BrandSerializer
     def post(self , request):
@@ -121,13 +129,24 @@ class DeleteBrandView(APIView):
 
 
 class DealerViewAccordingBrand(GenericAPIView):
-    serializer_class = DealerViewAccordingBrand
-    parser_classes = [JSONParser]
+    serializer_class = DealerViewAccordingBrandSerializer
+    # parser_classes = [ListParser]
     def post(self, request, format=None):
-        lits = request.data
-        print(lits)
+        serializer =DealerViewAccordingBrandSerializer(data=request.data) 
+        serializer.is_valid(raise_exception=True)
+        dealers_id = serializer.data.get('dealer')
+        dataa = []
+        for id in dealers_id:
+            data = Dealer.objects.get(dealer_id=id)
+            dataa.append(data)
+
+        dealers = DealerSerializer(dataa,many=True)
+      
+            
+      
         return Response({
             'status':'success',
-            "message":"data retrives successfully"
+            "message":"data retrives successfully",
+            'data':dealers.data
 
         },status=200)
