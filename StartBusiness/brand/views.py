@@ -139,14 +139,9 @@ class DealerViewAccordingBrand(GenericAPIView):
         for id in dealers_id:
             data = Dealer.objects.get(dealer_id=id)
             dataa.append(data)
-
         dealers = DealerSerializer(dataa,many=True)
-      
-            
-      
         return Response({
             'status':'success',
             "message":"data retrives successfully",
             'data':dealers.data
-
         },status=200)
