@@ -115,3 +115,14 @@ class DeleteProductView(APIView):
                 }, status=404)
     
 
+class productvideoUpload(GenericAPIView):
+    serializer_class = ProductSerializer
+    def post(self, request, input, format=None):
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'status':'success',
+            'message': "Product uploaded successfully"
+
+        },status=200)

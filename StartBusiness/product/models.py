@@ -33,7 +33,7 @@ class Product(models.Model):
 
     # Fields from Visuals
     image = models.ImageField(upload_to='product_images/')
-    demo_video = models.URLField()
+    demo_video = models.FileField(upload_to='product_video/')
 
     # Fields from ShippingInformation
     shipping_weight = models.DecimalField(max_digits=10, decimal_places=2)
@@ -41,7 +41,7 @@ class Product(models.Model):
     special_shipping_notes = models.TextField()
 
     # Fields from Tags
-    tags = models.ManyToManyField('Tag')
+    # tags = models.ManyToManyField('Tag')
 
     # Fields from Featured
     is_featured = models.BooleanField(default=False)
