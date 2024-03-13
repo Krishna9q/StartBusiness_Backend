@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from StartBusiness.s3_image_config import upload_base64_file
+from StartBusiness.s3_image_config import delete_file, upload_base64_file
 
 class CategoryRegisterView(GenericAPIView):
     serializer_class = CategorySerializer
@@ -96,6 +96,12 @@ class CategoryDeleteView(APIView):
         id = input
         if Category.objects.filter(category_id=id).count() >= 1:
             category = Category.objects.get(category_id=id)
+            file = category.category_image
+            print(file)
+            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            print(file)
+            data = delete_file(file)
+            print(data)
             category.delete()
             return Response({
             'status': status.HTTP_200_OK,
