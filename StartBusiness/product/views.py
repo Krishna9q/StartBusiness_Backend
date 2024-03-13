@@ -79,7 +79,7 @@ class ProductView(APIView):
     
 
 class UpdateProductView(APIView):
-    def patch(self, request, input, format=None):
+    def patch(self, request, format=None):
         _id = input
         print(_id)
         product = Product.objects.get(product_id=_id)
