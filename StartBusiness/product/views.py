@@ -19,6 +19,29 @@ class ProductRegisterView(GenericAPIView):
 
         )
     
+class OtherDetailsView(GenericAPIView):
+    # serializer_class = OtherSerializer
+    # def post(self,request ,input):
+    #     _id = input
+    #     print(_id)
+    #     product = Product.objects.get(product_id=_id)
+    #     serializer = OtherSerializer(product, data=request.data, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     if _id is not None:
+    #         serializer.save()
+    #         return Response({
+    #          'status': 'success',
+    #          'message': "Product updated successfully"
+    #     },status=200)
+    #     else:
+    #         return Response({
+    #             'status':'Product id not found'
+    #     },status=404)
+    pass 
+
+
+        
+    
 class ProductView(APIView):
     def get(self, request, input=None, format=None):
         _id = input
@@ -92,3 +115,14 @@ class DeleteProductView(APIView):
                 }, status=404)
     
 
+class productvideoUpload(GenericAPIView):
+    serializer_class = ProductSerializer
+    def post(self, request, input, format=None):
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'status':'success',
+            'message': "Product uploaded successfully"
+
+        },status=200)
