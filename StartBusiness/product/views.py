@@ -79,7 +79,7 @@ class ProductView(APIView):
     
 
 class UpdateProductView(APIView):
-    def patch(self, request, format=None):
+    def patch(self, request, input, format=None):
         _id = input
         print(_id)
         product = Product.objects.get(product_id=_id)
@@ -117,7 +117,7 @@ class DeleteProductView(APIView):
 
 class productvideoUpload(GenericAPIView):
     serializer_class = ProductSerializer
-    def post(self, request, input, format=None):
+    def post(self, request,format=None):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
