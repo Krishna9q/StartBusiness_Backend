@@ -4,7 +4,7 @@ from dealer.models import Dealer
 from dealer.serializers import DealerSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from StartBusiness.s3_image_config import upload_base64_file
+from StartBusiness.s3_image_config import delete_file, upload_base64_file
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -79,7 +79,7 @@ class UpdateDealerView(APIView):
         serializer.is_valid(raise_exception=True)
         if(request.data.get('dealer_image')is not None):
             file = request.data.get('dealer_image')
-            data=upload_base64_file(file,'brand')
+            data=upload_base64_file(file,'dealer')
             serializer.validated_data['dealer_image']= data
         serializer.save()
         return Response({
@@ -98,6 +98,9 @@ class DeleteDealerView(APIView):
         _id = input
         dealer = Dealer.objects.get(dealer_id=_id)
         if _id is not None:
+            file = dealer.dealer_image
+            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            delete_file(file)
             dealer.delete()
             return Response({
             'status': 'success',
