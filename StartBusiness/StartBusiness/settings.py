@@ -89,29 +89,29 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 #     }
 # }
 # postgres localhost
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sb',
-#         'USER': 'postgres',
-#         'PASSWORD': 'krishna',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-
-# Postgre AWS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mydb',
-        'USER': 'Krishna_Sadhu',
-        'PASSWORD': '147852369',
-        'HOST': 'mydatabase.c9i6acsg8l0l.ap-south-1.rds.amazonaws.com',
+        'NAME': 'local_SB',
+        'USER': 'postgres',
+        'PASSWORD': '768676',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+
+# # Postgre AWS
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'mydb',
+#         'USER': 'Krishna_Sadhu',
+#         'PASSWORD': '147852369',
+#         'HOST': 'mydatabase.c9i6acsg8l0l.ap-south-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 

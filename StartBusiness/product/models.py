@@ -6,195 +6,120 @@ from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 class Product(models.Model):
-    product_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.CharField(max_length=100)
-    manufacturer = models.CharField(max_length=100)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE)
+    manufacturer = models.ForeignKey(Brand,on_delete=models.CASCADE)
     sku = models.CharField(max_length=50, unique=True)
     country_of_origin = models.CharField(max_length=100)
 
-class Pricing(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    offer = models.CharField(max_length=255)
+      # Fields from Pricing
+    price = models.DecimalField(max_digits=10,null=True, decimal_places=2)
+    offer = models.CharField(max_length=255, blank=True)
     special_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-class ProductDetails(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    dimensions = ArrayField(models.DecimalField(max_digits=10, decimal_places=2), size=3)
-    color = models.CharField(max_length=100)
-    material = models.CharField(max_length=100)
-    style_design = models.CharField(max_length=100)
-    surface_finish = models.CharField(max_length=100)
-    edge_type = models.CharField(max_length=100)
+    # Fields from ProductDetails
+    dimensions = ArrayField(models.DecimalField(max_digits=10, decimal_places=2), null=True,size=3)
+    color = models.CharField(max_length=100,blank=True)
+    material = models.CharField(max_length=100,blank=True)
+    style_design = models.CharField(max_length=100,blank=True)
+    surface_finish = models.CharField(max_length=100,blank=True)
+    edge_type = models.CharField(max_length=100,blank=True)
 
-class Inventory(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    stock_quantity = models.PositiveIntegerField()
+    # Fields from Inventory
+    stock_quantity = models.PositiveIntegerField(null=True)
     availability = models.BooleanField(default=True)
 
-class Visuals(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/')
-    demo_video = models.URLField()
+    # Fields from Visuals
+    image = models.ImageField(upload_to='product_images/',null=True)
+    demo_video = models.URLField(null=True)
 
-class ShippingInformation(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    shipping_weight = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_dimensions = ArrayField(models.DecimalField(max_digits=10, decimal_places=2), size=3)
-    special_shipping_notes = models.TextField()
+    # Fields from ShippingInformation
+    shipping_weight = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    shipping_dimensions = ArrayField(models.DecimalField(max_digits=10, decimal_places=2), size=3,null=True)
+    special_shipping_notes = models.TextField(blank=True)
 
-class Tags(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    tag = models.CharField(max_length=100)
+    
+    tags = models.CharField(max_length=100)
 
-class Featured(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    # Fields from Featured
     is_featured = models.BooleanField(default=False)
 
-class Specifications(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    technical_specifications = models.TextField()
-    installation_instructions = models.TextField()
-    maintenance_instructions = models.TextField()
-    warranty_information = models.TextField()
+    # Fields from Specifications
+    technical_specifications = models.TextField(blank=True)
+    installation_instructions = models.TextField(blank=True)
+    maintenance_instructions = models.TextField(blank=True)
+    warranty_information = models.TextField(blank=True)
 
-class TaxInformation(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    tax_rate = models.DecimalField(max_digits=5, decimal_places=2)
-    tax_code = models.CharField(max_length=20)
+    # Fields from TaxInformation
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    tax_code = models.CharField(max_length=20,blank=True)
     tax_exempt = models.BooleanField(default=False)
 
-class ProductVariants(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    size_variant = models.CharField(max_length=100)
-    color_variant = models.CharField(max_length=100)
-    style_variant = models.CharField(max_length=100)
+    # Fields from ProductVariants
+    size_variant = models.CharField(max_length=100,blank=True)
+    color_variant = models.CharField(max_length=100,blank=True)
+    style_variant = models.CharField(max_length=100,blank=True)
 
-class RelatedProducts(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='related_products')
-    related_product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='related_to')
+    # Fields from RelatedProducts - Assuming self-referencing relationship
 
-class BulkPricing(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    bulk_quantity_pricing = models.DecimalField(max_digits=10, decimal_places=2)
-    min_order_quantity = models.PositiveIntegerField()
+    # related_products = models.ManyToManyField('self', symmetrical=False)
 
-class SalesInformation(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    sales_start_date = models.DateTimeField()
-    sales_end_date = models.DateTimeField()
+    # Fields from BulkPricing
+    bulk_quantity_pricing = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    min_order_quantity = models.PositiveIntegerField(null=True)
 
-class CustomizationOptions(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    customization_choices = models.TextField()
-    customization_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    # Fields from SalesInformation
+    sales_start_date = models.DateTimeField(auto_now=True)
+    sales_end_date = models.DateTimeField(auto_now=True)
 
-class ProductReviews(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2)
-    num_reviews = models.PositiveIntegerField()
+    # Fields from CustomizationOptions
+    customization_choices = models.TextField(blank=True)
+    customization_fee = models.DecimalField(max_digits=10, decimal_places=2,null=True)
 
-class ReturnPolicy(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    return_period_days = models.PositiveIntegerField()
-    return_conditions = models.TextField()
+    # Fields from ProductReviews
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2,null=True)
+    num_reviews = models.PositiveIntegerField(null=True)
 
-class SalesHistory(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    sales_quantity = models.PositiveIntegerField()
-    sales_revenue = models.DecimalField(max_digits=15, decimal_places=2)
+    # Fields from ReturnPolicy
+    return_period_days = models.PositiveIntegerField(null=True)
+    return_conditions = models.TextField(blank=True)
 
-class ProductStatus(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    # Fields from SalesHistory
+    sales_quantity = models.PositiveIntegerField(null=True)
+    sales_revenue = models.DecimalField(max_digits=15, decimal_places=2,null=True)
+
+    # Fields from ProductStatus
     is_active = models.BooleanField(default=True)
     is_discontinued = models.BooleanField(default=False)
 
-class AdminNotes(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    admin_notes = models.TextField()
+    # Fields from AdminNotes
+    admin_notes = models.TextField(blank=True)
 
-class DateAdded(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    # Fields from DateAdded
     date_added = models.DateTimeField(auto_now_add=True)
 
-class LastModified(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    # Fields from LastModified
     last_modified = models.DateTimeField(auto_now=True)
 
-class UserAssigned(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    user_assigned = models.CharField(max_length=100)
+    # Fields from UserAssigned
+    user_assigned = models.CharField(max_length=100,blank=True)
 
-class ApprovalStatus(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    approval_status = models.CharField(max_length=20)
+    # Fields from ApprovalStatus
+    approval_status = models.CharField(max_length=20,blank=True)
 
-class InternalProductID(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    internal_product_id = models.CharField(max_length=50)
+    # Fields from InternalProductID
+    internal_product_id = models.CharField(max_length=50,blank=True)
 
-class SalesRepresentative(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    sales_representative = models.CharField(max_length=100)
+    # Fields from SalesRepresentative
+    sales_representative = models.CharField(max_length=100,blank=True)
 
-class ProductURL(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    product_url = models.URLField()
+    # Fields from ProductURL
+    product_url = models.URLField(blank=True)
 
-class NotificationPreferences(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
-    notification_preferences = models.TextField()
+    # Fields from NotificationPreferences
+    notification_preferences = models.TextField(blank=True)
 
-class AuditTrail(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    change_description = models.TextField()
-    date_changed = models.DateTimeField(auto_now_add=True)
-
-
-
-
-
-
-
-
-
-
-
-# class Product (models.Model):
-#     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     product_name = models.CharField(max_length = 200)
-#     description  = models.CharField(max_length = 220)
-#  # category = models.ForeignKey(Category,default= uuid.uuid4,on_delete=models.CASCADE)
-#     # brand = models.ForeignKey(Brand,default=uuid.uuid4,on_delete=models.CASCADE)
-#     sku =  models.CharField(max_length=50,unique = True)
-#     country = models.CharField(max_length=50)
-    
-# class Prince_and_Offer(models.Model):
-#     price_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-#     # price = models.DecimalField(max_digits=7,decimal_places = 3)
-#     # special_Price = models.DecimalField(max_digits=7,decimal_places = 3)
-#     # product_id = models.ForeignKey(Product)
-# class Product_Details(models.Model):
-#     product_details = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Inventory_And_Stock(models.Model):
-#     inventory_and_stock_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Visuals(models.Model):
-#     visuals = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Additional_Information(models.Model):
-#     additional_information = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Specifications_And_Instructions(models.Model):
-#     specifications_and_instructions = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Tax_Information(models.Model):
-#     tax_information = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-# class Product_Variants(models.Model):
-#     product_variants = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+    # Fields from AuditTrail
+    audit_trail = models.TextField(blank=True)
