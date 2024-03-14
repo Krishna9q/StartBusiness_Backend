@@ -7,7 +7,8 @@ urlpatterns = [
     path('view/<uuid:input>/', ProductView.as_view(), name = 'manager view by id'),
     path('update/<uuid:input>/',UpdateProductView.as_view(),name="update manager by id"),
     path('delete/<uuid:input>/',DeleteProductView.as_view() ,name='delete manager by id'),
-    path('other/<uuid:input>/',OtherDetailsView.as_view() ,name='delete manager by id')
+    path('pricing/<uuid:input>/',PricingView.as_view() ,name='delete manager by id'),
+    path('otherDetails/<uuid:input>/',ProductDetailsView.as_view() ,name='delete manager by id')
     
     
 ]
