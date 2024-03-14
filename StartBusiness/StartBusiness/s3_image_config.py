@@ -55,3 +55,12 @@ def upload_base64_file(base64_file,folder_name):
         ExtraArgs={'ACL': 'public-read', 'ContentType': content_type}
     )
     return f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
+
+def delete_file(file_name):
+        client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+        print(file_name)
+        bucket_name = AWS_STORAGE_BUCKET_NAME
+        response = client.delete_object(Bucket=bucket_name, Key=file_name)
+        print(response)
+        return "File Deleted Successfully!"
