@@ -5,7 +5,7 @@ from brand.serializers import BrandSerializer,DealerViewAccordingBrandSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from StartBusiness.s3_image_config import upload_base64_file
+from StartBusiness.s3_image_config import delete_file, upload_base64_file
 from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -115,6 +115,9 @@ class DeleteBrandView(APIView):
         _id = input
         brand = Brand.objects.get(brand_id=_id)
         if _id is not None:
+            file = brand.brand_logo
+            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            delete_file(file)
             brand.delete()
             return Response({
             'status': 'success',
