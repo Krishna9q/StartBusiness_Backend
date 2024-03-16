@@ -1,5 +1,5 @@
 from django.urls import path, include
-from manager.views import *
+from manager.views import ManagerRegisterView,UpdateManagerView,DeleteManagerView,ManagerView
 
 urlpatterns = [
     path('register',ManagerRegisterView.as_view(),name="hello"),
