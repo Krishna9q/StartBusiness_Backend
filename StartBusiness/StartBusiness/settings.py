@@ -93,9 +93,9 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'sb',
+#         'NAME': 'local_SB',
 #         'USER': 'postgres',
-#         'PASSWORD': 'krishna',
+#         'PASSWORD': '768676',
 #         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from dealer.views import *
+from dealer.views import DealerAddView,UpdateDealerView,DeleteDealerView,DealerAllView,DealerView
 
 urlpatterns = [
     path('add/',DealerAddView.as_view(),name="dealer add"),

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from brand.views import *
+from brand.views import BrandAddView,UpdateBrandView,DeleteBrandView,BrandAllView,DealerViewAccordingBrand,BrandView
 
 urlpatterns = [
     path('add/',BrandAddView.as_view(),name="brand add"),
