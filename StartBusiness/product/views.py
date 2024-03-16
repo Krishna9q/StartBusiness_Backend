@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from product.serializers import ProductVideoSerializers
 from rest_framework.response import Response
 from StartBusiness.s3_image_config import delete_file
 from product.serializers import *
 from .models import Product
+from rest_framework.views import APIView
 
 # register 01
 class ProductRegisterView(GenericAPIView):
@@ -77,7 +77,7 @@ class UpdateProductView(APIView):
                 'message': "No such Product id exists for delete."
                 }, status=404)
     
-    
+
 class DeleteProductView(APIView):
     def delete(self, request, input, format=None):
         _id = input

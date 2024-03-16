@@ -1,10 +1,16 @@
 from rest_framework import serializers
 from product.models import Product
 
-class ProductVideoSerializers(serializers.ModelSerializer):
+
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['name','description','category','brand','sku','country_of_origin']
+
+# class ProductVideoSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = ['name','description','category','brand','sku','country_of_origin']
 
 # Serielizer for getting full details 
 class ProductFullDetailsSerializer(serializers.ModelSerializer):
