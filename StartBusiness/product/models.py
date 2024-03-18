@@ -18,9 +18,15 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
     sku = models.CharField(max_length=8, unique=True,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
     country_of_origin = models.CharField(max_length=100)
+    product_use = models.TextField(blank=True)
 
      # Fields from media
-    image = models.ImageField(upload_to='product_images/',null=True)
+    image = models.ImageField(upload_to='product_images/')
+    image1 = models.ImageField(upload_to='product_images/',null=True)
+    image2 = models.ImageField(upload_to='product_images/',null=True)
+    image3 = models.ImageField(upload_to='product_images/',null=True)
+    image4 = models.ImageField(upload_to='product_images/',null=True)
+    image5 = models.ImageField(upload_to='product_images/',null=True)
     demo_video = models.FileField(upload_to='product_videos/',null=True)
 
 
