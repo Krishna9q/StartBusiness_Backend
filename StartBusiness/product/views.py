@@ -17,7 +17,7 @@ class ProductRegisterView(GenericAPIView):
         return Response({
             "status" :"success",
             "message":"Product is added successfully",
-            "data":serializer.data,
+            "product_id":serializer.data['product_id'],
             # 'product_id':serializer
             }, status=201
 

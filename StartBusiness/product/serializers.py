@@ -5,7 +5,7 @@ from product.models import Product
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name','category_id','brand_id','country_of_origin','description']
+        fields = ['product_id','name','category','brand','country_of_origin','description']
 
 # class ProductVideoSerializers(serializers.ModelSerializer):
 #     class Meta:
