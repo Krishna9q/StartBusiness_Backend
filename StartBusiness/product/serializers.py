@@ -5,7 +5,7 @@ from product.models import Product
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name','description','category','brand','sku','country_of_origin','product_use']
+        fields = ['name','category_id','brand_id','country_of_origin','description']
 
 # class ProductVideoSerializers(serializers.ModelSerializer):
 #     class Meta:
@@ -28,47 +28,38 @@ class ProductMediaSerializer(serializers.ModelSerializer):
 class ProductDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product 
-        fields = ['dimensions', 'color', 'material', 'style_design', 'surface_finish', 'edge_type']
+        fields = ['length','width','thickness','weight', 'color', 'material', 'style_design', 'surface_finish', 'edge_type','sq_ft_box', 'no_of_pcs_box','product_collections','label','layout']
 
 
 class ProductPricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product       
-        fields = ['price', 'offer', 'special_price']
-
-class BulkPricingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['bulk_quantity_pricing', 'min_order_quantity','bulk_discount']
+        fields = ['price', 'discount','offer_type', 'discount_price','discount_price_start','discount_price_end','min_order_quantity','bulk_quantity_pricing','bulk_discount','tax_class','tax_rate', 'tax_code' ]
 
 
-class ProductTaxInformationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['tax_rate', 'tax_code', 'tax_exempt']
 
 
 class ProductInventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Product 
-        fields = ['stock_quantity', 'availability','inventory_management']
+        fields = ['sku','stock_quantity', 'availability']
 
 
 class ProductVariantsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['size_variant', 'color_variant', 'style_variant']
+        fields = ['size_variant', 'color_variant', 'style_variant','related_product','cross_selling_product']
 
 class AdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['application_details','maintainance_details','privacy_policy']
+        fields = ['product_use','maintainance_details','privacy_policy']
 
 
 class ProductSeoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['product_url','meta_title','meta_description','targeted_keywords','long_tail_keywords']
+        fields = ['product_url','meta_title','meta_description','featured_keywords','long_tail_keywords','status','is_featured']
 
 
 

@@ -14,11 +14,11 @@ class Product(models.Model):
     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
+    category_id = models.ForeignKey(Category,on_delete=models.CASCADE)
+    brand_id = models.ForeignKey(Brand,on_delete=models.CASCADE)
     sku = models.CharField(max_length=8, unique=True,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
     country_of_origin = models.CharField(max_length=100)
-    product_use = models.TextField(blank=True)
+
 
      # Fields from media
     image = models.ImageField(upload_to='product_images/')
@@ -31,20 +31,31 @@ class Product(models.Model):
 
 
     # Fields from ProductDetails
-    dimensions = ArrayField(models.DecimalField(max_digits=10, decimal_places=2), null=True,size=3)
+    length = models.FloatField(null = True, blank=True)
+    width = models.FloatField(null = True, blank=True)
+    thickness = models.FloatField(null = True, blank=True)
+    weight = models.FloatField(null = True, blank=True)
     color = models.CharField(max_length=100,blank=True)
     material = models.CharField(max_length=100,blank=True)
     style_design = models.CharField(max_length=100,blank=True)
     surface_finish = models.CharField(max_length=100,blank=True)
     edge_type = models.CharField(max_length=100,blank=True)
+    sq_ft_box  = models.DecimalField(max_digits=10,null=True, decimal_places=2)
+    no_of_pcs_box = models.IntegerField(null=True,blank=True)
+    product_collections = models.CharField(max_length=10000,blank=True, null=True)
+    label = models.CharField(max_length=10000,blank=True, null=True)
+    layout = models.CharField(max_length=10000,blank=True, null=True)
+
+
 
       # Fields from Pricing
     price = models.DecimalField(max_digits=10,null=True, decimal_places=2)
-    offer = models.CharField(max_length=255, blank=True)
+    discount = models.FloatField(null = True, blank=True)
+    offer_type = models.CharField(max_length=255, blank=True)
     discount = models.PositiveIntegerField(default=0)  # Percentage of
-    special_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    special_price_start = models.DateTimeField(auto_now=True)
-    special_price_end = models.DateTimeField(auto_now=True)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    discount_price_start = models.DateTimeField()
+    discount_price_end = models.DateTimeField()
 
     
     # Fields from BulkPricing
@@ -55,22 +66,24 @@ class Product(models.Model):
     # Fields from TaxInformation
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     tax_code = models.CharField(max_length=20,blank=True)
-    tax_exempt = models.BooleanField(default=False)
+    tax_class = models.CharField(max_length=225,blank=True)
 
     # Fields from Inventory
     stock_quantity = models.PositiveIntegerField(null=True)
     availability = models.BooleanField(default=True)
-    inventory_management=models.CharField(max_length=20,blank=True)
+   
 
 
     # Fields from ProductVariants
-    size_variant = models.CharField(max_length=100,blank=True)
-    color_variant = models.CharField(max_length=100,blank=True)
-    style_variant = models.CharField(max_length=100,blank=True)
+    size_variant = ArrayField(models.CharField(max_length=100,blank=True))
+    color_variant =  ArrayField(models.CharField(max_length=100,blank=True))
+    style_variant = ArrayField(models.CharField(max_length=100,blank=True))
+    related_product = ArrayField(models.CharField(max_length=100,blank=True))
+    cross_selling_product= ArrayField(models.CharField(max_length=100,blank=True))
 
 
     # additional information
-    application_details = models.TextField()
+    product_use = models.TextField(blank=True)
     maintainance_details = models.TextField()
     privacy_policy = models.TextField()
 
@@ -78,7 +91,9 @@ class Product(models.Model):
     product_url = models.URLField()
     meta_title = models.CharField(max_length=255,blank=True)
     meta_description = models.TextField()
-    targeted_keywords = models.CharField(max_length=255,blank=True)
+    featured_keywords = models.CharField(max_length=255,blank=True)
     long_tail_keywords = models.TextField()
+    status = models.CharField(max_length = 50, choices=(('Published', 'Published'),('Draft', 'Draft'),('Pending','Pending')))
+    is_featured = models.BooleanField()
 
     

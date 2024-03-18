@@ -13,10 +13,12 @@ class ProductRegisterView(GenericAPIView):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        print(serializer.validated_data)
         return Response({
             "status" :"success",
             "message":"Product is added successfully",
-            "data":serializer.data
+            "data":serializer.data,
+            # 'product_id':serializer
             }, status=201
 
         ) 
@@ -158,47 +160,6 @@ class PricingView(GenericAPIView):
                 'status':'Product id not found'
         },status=404)
 
-# ProductBulkPricing View
-class ProductBulkPricingView(GenericAPIView):
-    serializer_class = BulkPricingSerializer
-    def patch(self,request ,input):
-        _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = BulkPricingSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
-            serializer.save()
-            return Response({
-             'status': 'success',
-             'message': "Product updated successfully"
-        },status=200)
-        else:
-            return Response({
-                'status':'Product id not found'
-        },status=404)
-
-
- # Product TaxInformation View
-class ProductTaxInformationView(GenericAPIView):
-    serializer_class = ProductTaxInformationSerializer
-    def patch(self,request ,input):
-        _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductTaxInformationSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
-            serializer.save()
-            return Response({
-             'status': 'success',
-             'message': "Product updated successfully"
-        },status=200)
-        else:
-            return Response({
-                'status':'Product id not found'
-        },status=404)    
-    
     # Product update inventory
 class InventoryView(GenericAPIView):
     serializer_class = ProductInventorySerializer
@@ -428,75 +389,7 @@ class PricingAllView(APIView):
             }, status=200)
 
 # product tax view all
-class ProductTaxAllView(APIView):
-    serializer_class = ProductTaxInformationSerializer
-    def get(self, request, input=None,format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
-                product  = Product.objects.get(product_id=_id)
-                serializer = ProductTaxInformationSerializer(product)
-                return Response(
-                    {
-                        'status': 'success',
-                        'message': "Product data retrieved successfully",
-                        'data': serializer.data,
-                    }, status=200
-                )
-            else:
-             
-                return Response(
-                    {
-                        'status':  'error',
-                        'message': "Product not found",
-                    },
-                    status=404
-                )
-        else:
-            product = Product.objects.all()    
-            serializer = ProductTaxInformationSerializer(product, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "Product data retrieved successfully",
-                 'data': serializer.data,
-            }, status=200)
-        
-# Bulk pricing all view
-class BulkPricingAllView(APIView):
-    serializer_class = BulkPricingSerializer
-    def get(self, request, input=None,format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
-                product  = Product.objects.get(product_id=_id)
-                serializer = BulkPricingSerializer(product)
-                return Response(
-                    {
-                        'status': 'success',
-                        'message': "Product data retrieved successfully",
-                        'data': serializer.data,
-                    }, status=200
-                )
-            else:
-             
-                return Response(
-                    {
-                        'status':  'error',
-                        'message': "Product not found",
-                    },
-                    status=404
-                )
-        else:
-            product = Product.objects.all()    
-            serializer = BulkPricingSerializer(product, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "Product data retrieved successfully",
-                 'data': serializer.data,
-            }, status=200)
-        
+
 class ProductInventoryAllView(APIView):
     serializer_class = ProductInventorySerializer
     def get(self, request, input=None,format=None):
