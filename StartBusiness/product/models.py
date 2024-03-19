@@ -16,7 +16,7 @@ class Product(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
-    sku = models.CharField(max_length=8, unique=True,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
+    sku = models.CharField(max_length=8,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
     country_of_origin = models.CharField(max_length=100)
 
 
@@ -32,9 +32,13 @@ class Product(models.Model):
 
     # Fields from ProductDetails
     length = models.FloatField(null = True, blank=True)
+    length_unit = models.CharField(null = True, blank = True, max_length=255)
     width = models.FloatField(null = True, blank=True)
+    width_unit = models.CharField(null = True, blank = True, max_length=255)
     thickness = models.FloatField(null = True, blank=True)
+    thickness_unit = models.CharField(null = True, blank = True, max_length=255)
     weight = models.FloatField(null = True, blank=True)
+    weight_unit = models.CharField(null = True, blank = True, max_length=255)
     color = models.CharField(max_length=100,blank=True,null=True)
     material = models.CharField(max_length=100,blank=True,null=True)
     style_design = models.CharField(max_length=100,blank=True,null=True)
