@@ -48,7 +48,7 @@ class Product(models.Model):
     no_of_pcs_box = models.IntegerField(blank=True,null=True)
     product_collections = models.CharField(max_length=10000,blank=True, null=True)
     label = models.CharField(max_length=10000,blank=True, null=True)
-    layout = models.CharField(max_length=10000,blank=True, null=True)
+    layout = ArrayField(models.CharField(max_length=10000,blank=True, null=True))
 
 
 
