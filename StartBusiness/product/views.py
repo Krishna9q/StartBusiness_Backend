@@ -101,7 +101,7 @@ class DeleteProductView(APIView):
  # Product update media
 class ProductMediaView(GenericAPIView):
     serializer_class = ProductMediaSerializer
-    def post(self,request ,input):
+    def patch(self,request ,input):
         _id = input
         print(_id)
         product = Product.objects.get(product_id=_id)
