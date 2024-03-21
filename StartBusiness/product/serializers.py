@@ -26,6 +26,7 @@ class ProductMediaSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailsSerializer(serializers.ModelSerializer):
+    layout = serializers.ListField(required=False, allow_empty=True)
     class Meta:
         model = Product 
         fields = ['length','width','thickness','weight', 'color', 'material', 'style_design', 'surface_finish', 'edge_type','sq_ft_box', 'no_of_pcs_box','product_collections','label','layout']
