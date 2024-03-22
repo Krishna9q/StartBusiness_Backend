@@ -91,7 +91,8 @@ class DeleteDealerView(APIView):
         dealer = Dealer.objects.get(dealer_id=_id)
         if _id is not None:
             file = dealer.dealer_image
-            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            file = file.name
+            print(file)
             delete_file(file)
             dealer.delete()
             return Response({

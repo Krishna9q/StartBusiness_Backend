@@ -108,7 +108,7 @@ class DeleteBrandView(APIView):
         brand = Brand.objects.get(brand_id=_id)
         if _id is not None:
             file = brand.brand_logo
-            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            file = file.name
             delete_file(file)
             brand.delete()
             return Response({

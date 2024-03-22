@@ -90,7 +90,7 @@ class CategoryDeleteView(APIView):
         if Category.objects.filter(category_id=id).count() >= 1:
             category = Category.objects.get(category_id=id)
             file = category.category_image
-            header,file = file.split('https://sangeetamarble.s3.amazonaws.com/')
+            file = file.name
             delete_file(file)
             category.delete()
             return Response({
