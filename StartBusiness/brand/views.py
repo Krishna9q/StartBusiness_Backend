@@ -26,9 +26,6 @@ class BrandAddView(GenericAPIView):
     def post(self , request):
             serializer = BrandSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            file = request.data.get('brand_logo')
-            data=upload_base64_file(file,'brand')
-            serializer.validated_data['brand_logo']= data
             serializer.save()
 
             return Response({
@@ -92,13 +89,8 @@ class UpdateBrandView(APIView):
         brand = Brand.objects.get(brand_id=_id)
         serializer = BrandSerializer(brand, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        if request.data.get('brand_logo') is not None:
-           file = request.data.get('brand_logo')
-           data=upload_base64_file(file,'brand')
-           serializer.validated_data['brand_logo']= data
-        
-        
         serializer.save()
+        
         return Response({
              'status': 'success',
              'message': "brand updated successfully"

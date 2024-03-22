@@ -16,12 +16,8 @@ class DealerAddView(GenericAPIView):
     def post(self , request):
             serializer = DealerSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            file = request.data.get('dealer_image')
-            data=upload_base64_file(file,'brand')
-            serializer.validated_data['dealer_image']= data
             serializer.save()
          
-
             return Response({
             "status" :"success",
             "message":"Dealer is added successfully",
@@ -77,10 +73,6 @@ class UpdateDealerView(APIView):
         dealer = Dealer.objects.get(dealer_id=_id)
         serializer = DealerSerializer(dealer, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        if(request.data.get('dealer_image')is not None):
-            file = request.data.get('dealer_image')
-            data=upload_base64_file(file,'dealer')
-            serializer.validated_data['dealer_image']= data
         serializer.save()
         return Response({
              'status': 'success',

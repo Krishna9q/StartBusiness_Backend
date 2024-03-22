@@ -9,6 +9,6 @@ class Dealer(models.Model):
     dealer_mobile_number = models.CharField(max_length=10,unique=True)
     dealer_address = models.TextField(blank=True)
     dealer_landmark = models.TextField(blank=True)
-    dealer_image = models.TextField(blank=True)
+    dealer_image = models.ImageField(upload_to='dealer/',null=True)
     dealer_description = models.TextField(blank=True)
     
