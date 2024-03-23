@@ -14,11 +14,12 @@ class Product(models.Model):
     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.ForeignKey(Category,on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE, default=uuid.uuid4)
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE, default=uuid.uuid4)
     sku = models.CharField(max_length=8,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
     country_of_origin = models.CharField(max_length=100)
-
+    counter = models.IntegerField(default=0,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
 
      # Fields from media
     image = models.ImageField(upload_to='product_images/',null=True)
@@ -48,7 +49,7 @@ class Product(models.Model):
     no_of_pcs_box = models.IntegerField(blank=True,null=True)
     product_collections = models.CharField(max_length=10000,blank=True, null=True)
     label = models.CharField(max_length=10000,blank=True, null=True)
-    layout = ArrayField(models.CharField(max_length=10000))
+    layout = ArrayField(models.CharField(max_length=10000),null=True)
 
 
       # Fields from Pricing

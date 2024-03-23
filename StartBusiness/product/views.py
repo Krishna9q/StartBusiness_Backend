@@ -12,15 +12,16 @@ class ProductRegisterView(GenericAPIView):
     def post(self,request):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.validated_data['counter'] = 1
         serializer.save()
-        print(serializer.validated_data)
+       
         return Response({
             "status" :"success",
             "message":"Product is added successfully",
             "product_id":serializer.data['product_id'],
             # 'product_id':serializer
             }, status=201
-
+  
         ) 
 
 
@@ -49,14 +50,7 @@ class ProductView(APIView):
                     },
                     status=404
                 )
-        else:
-            product = Product.objects.all()    
-            serializer = ProductFullDetailsSerializer(product, many=True)
-            return Response({
-                 'status': 'success',
-                 'message': "Product data retrieved successfully",
-                 'data': serializer.data,
-            }, status=200)
+        
     
 
 class UpdateProductView(APIView):
