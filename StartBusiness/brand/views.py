@@ -105,21 +105,23 @@ class UpdateBrandView(APIView):
 class DeleteBrandView(APIView):
     def delete(self, request, input, format=None):
         _id = input
-        brand = Brand.objects.get(brand_id=_id)
-        if _id is not None:
+        if Brand.objects.filter(brand_id=_id).count() >= 1:
+            brand = Brand.objects.get(brand_id=_id)
             file = brand.brand_logo
             file = file.name
             delete_file(file)
             brand.delete()
             return Response({
-            'status': 'success',
-            'message': "brand deleted successfully"
-        }, status=status.HTTP_200_OK)
+            'status': status.HTTP_200_OK,
+             'message': 'Brand Deleted Successfully' 
+            },
+            status=200)
         else:
             return Response({
-                'status': 'failure',
-                'message': "No such brand id exists for delete."
-                }, status=status.HTTP_404_NOT_FOUND)
+             'status': status.HTTP_400_BAD_REQUEST,
+             'message': 'invalid Brand_id',
+            },
+            status=400)
     
 
 

@@ -67,43 +67,47 @@ class DealerView(APIView):
 
 # update dealer
 class UpdateDealerView(APIView):
+    serializer_class = DealerSerializer
     def patch(self, request, input, format=None):
       _id = input
-      if _id is not None: 
-        dealer = Dealer.objects.get(dealer_id=_id)
-        serializer = DealerSerializer(dealer, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({
+      if Dealer.objects.filter(dealer_id=_id).count() >= 1:
+            print(_id)
+            dealer = Dealer.objects.get(dealer_id=_id)
+            serializer = DealerSerializer(dealer, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({
              'status': 'success',
-             'message': "dealer updated successfully"
+             'message': "Dealer updated successfully"
         },status=200)
       else:
             return Response({
-                'status':'dealer id not found'
+                'status':'Dealer id not found'
         },status=404)
      
        
 # delete dealer
 class DeleteDealerView(APIView):
-    def delete(self, request, input, format=None):
+     def delete(self, request, input, format=None):
         _id = input
-        dealer = Dealer.objects.get(dealer_id=_id)
-        if _id is not None:
+        if Dealer.objects.filter(dealer_id=_id).count() >= 1:
+            dealer = Dealer.objects.get(dealer_id=_id)
             file = dealer.dealer_image
             file = file.name
-            print(file)
             delete_file(file)
             dealer.delete()
             return Response({
-            'status': 'success',
-            'message': "dealer deleted successfully"
-        }, status=200)
+            'status': status.HTTP_200_OK,
+             'message': 'Dealer Deleted Successfully' 
+            },
+            status=200)
         else:
             return Response({
-                'status': 'failure',
-                'message': "No such dealer id exists for delete."
-                }, status=404)
+             'status': status.HTTP_400_BAD_REQUEST,
+             'message': 'invalid dealer_id',
+            },
+            status=400)
+    
     
 
 

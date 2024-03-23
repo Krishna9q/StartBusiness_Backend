@@ -3,10 +3,10 @@ from product.views import *
 
 urlpatterns = [
     path('basicDetails/add/', ProductRegisterView.as_view(),name="add"),
-    path('view/', ProductView.as_view(), name = 'manager view'),
-    path('view/<uuid:input>/', ProductView.as_view(), name = 'manager view by id'),
-    path('basicDetails/update/<uuid:input>/',UpdateProductView.as_view(),name="update manager by id"),
-    path('delete/<uuid:input>/',DeleteProductView.as_view() ,name='delete manager by id'),
+    path('view/', ProductView.as_view(), name = 'product view'),
+    path('view/<uuid:input>/', ProductView.as_view(), name = 'product view by id'),
+    path('basicDetails/update/<uuid:input>/',UpdateProductView.as_view(),name="update product by id"),
+    path('delete/<uuid:input>/',DeleteProductView.as_view() ,name='delete product by id'),
     path('media/update/<uuid:input>/',ProductMediaView.as_view(),name='update product visuals by product id'),
     path('productDetails/update/<uuid:input>/',ProductDetailsView.as_view(),name="product details update"),
     path('productPricing/update/<uuid:input>/',PricingView.as_view(),name="pricing update"),

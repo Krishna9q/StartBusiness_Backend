@@ -5,6 +5,7 @@ from StartBusiness.s3_image_config import delete_file
 from product.serializers import *
 from .models import Product
 from rest_framework.views import APIView
+from rest_framework import status
 
 # register 01
 class ProductRegisterView(GenericAPIView):
@@ -60,41 +61,44 @@ class ProductView(APIView):
     
 
 class UpdateProductView(APIView):
+    serializer_class = ProductSerializer
     def patch(self, request, input, format=None):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
-
             return Response({
-            'status': 'success',
-            'message': "Product deleted successfully"
-        }, status=200)
+             'status': 'success',
+             'message': "Product updated successfully"
+        },status=200)
         else:
             return Response({
-                'status': 'failure',
-                'message': "No such Product id exists for delete."
-                }, status=404)
+                'status':'Product id not found'
+        },status=404)
     
 
 class DeleteProductView(APIView):
     def delete(self, request, input, format=None):
         _id = input
-        product = Product.objects.get(product_id=_id)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            product = Product.objects.get(product_id=_id)
             product.delete()
             return Response({
-            'status': 'success',
-            'message': "Product deleted successfully"
-        }, status=200)
+            'status': status.HTTP_200_OK,
+             'message': 'Product Deleted Successfully' 
+            },
+            status=200)
         else:
             return Response({
-                'status': 'failure',
-                'message': "No such Product id exists for delete."
-                }, status=404)
+             'status': status.HTTP_400_BAD_REQUEST,
+             'message': 'invalid product id',
+            },
+            status=400)
+   
+        
 
 # Other ----------------------------------------------------------
         
@@ -103,11 +107,11 @@ class ProductMediaView(GenericAPIView):
     serializer_class = ProductMediaSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductMediaSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductMediaSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -123,11 +127,11 @@ class ProductDetailsView(GenericAPIView):
     serializer_class = ProductDetailsSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductDetailsSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductDetailsSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -145,31 +149,11 @@ class PricingView(GenericAPIView):
     serializer_class = ProductPricingSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductPricingSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
-            serializer.save()
-            return Response({
-             'status': 'success',
-             'message': "Pricing updated successfully"
-        },status=200)
-        else:
-            return Response({
-                'status':'Product id not found'
-        },status=404)
-
-    # Product update inventory
-class InventoryView(GenericAPIView):
-    serializer_class = ProductInventorySerializer
-    def patch(self,request ,input):
-        _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductInventorySerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductPricingSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -179,8 +163,25 @@ class InventoryView(GenericAPIView):
             return Response({
                 'status':'Product id not found'
         },status=404)
-
-
+    # Product update inventory
+class InventoryView(GenericAPIView):
+    serializer_class = ProductInventorySerializer
+    def patch(self,request ,input):
+        _id = input
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductInventorySerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({
+             'status': 'success',
+             'message': "Product updated successfully"
+        },status=200)
+        else:
+            return Response({
+                'status':'Product id not found'
+        },status=404)
     
 
     # Product Variants View
@@ -188,11 +189,11 @@ class ProductVariantsView(GenericAPIView):
     serializer_class = ProductVariantsSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductVariantsSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductVariantsSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -209,11 +210,11 @@ class ProductAdditionalView(GenericAPIView):
     serializer_class = AdditionalInfoSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = AdditionalInfoSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = AdditionalInfoSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -230,11 +231,11 @@ class SeoInformationView(GenericAPIView):
     serializer_class = ProductSeoSerializer
     def patch(self,request ,input):
         _id = input
-        print(_id)
-        product = Product.objects.get(product_id=_id)
-        serializer = ProductSeoSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        if _id is not None:
+        if Product.objects.filter(product_id=_id).count() >= 1:
+            print(_id)
+            product = Product.objects.get(product_id=_id)
+            serializer = ProductSeoSerializer(product, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
@@ -244,6 +245,7 @@ class SeoInformationView(GenericAPIView):
             return Response({
                 'status':'Product id not found'
         },status=404)
+       
     
     
 # ---------------------------------------------------------------------
