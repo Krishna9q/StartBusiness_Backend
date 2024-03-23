@@ -50,6 +50,14 @@ class ProductView(APIView):
                     },
                     status=404
                 )
+        else:
+            product = Product.objects.all()
+            serializer = ProductFullDetailsSerializer(product, many=True)
+            return Response({
+                "status_code":200,
+                "message":"data retrieved successfully",
+                "data":serializer.data
+            })
         
     
 
