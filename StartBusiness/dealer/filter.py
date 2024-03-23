@@ -1,6 +1,7 @@
 from django_filters import FilterSet
-from brand.models import Dealer
+from dealer.models import Dealer
 import django_filters
+
 
 class DealerFilter(FilterSet):
     dealer_name = django_filters.CharFilter(field_name='dealer_name', lookup_expr='icontains')
