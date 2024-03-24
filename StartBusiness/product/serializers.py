@@ -43,7 +43,7 @@ class ProductPricingSerializer(serializers.ModelSerializer):
 class ProductInventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Product 
-        fields = ['sku','stock_quantity', 'availability','counter']
+        fields = ['sku','minimum_stock_level', 'maximum_stock_level','availability','counter']
 
 
 class ProductVariantsSerializer(serializers.ModelSerializer):
@@ -54,7 +54,7 @@ class ProductVariantsSerializer(serializers.ModelSerializer):
 class AdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['product_use','maintainance_details','privacy_policy','counter']
+        fields = ['product_use','maintenance_details','privacy_policy','counter']
 
 
 class ProductSeoSerializer(serializers.ModelSerializer):

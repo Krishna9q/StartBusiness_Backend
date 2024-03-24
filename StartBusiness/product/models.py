@@ -73,7 +73,8 @@ class Product(models.Model):
     tax_class = models.CharField(max_length=225,blank=True,null=True)
 
     # Fields from Inventory
-    stock_quantity = models.PositiveIntegerField(null=True)
+    minimum_stock_level = models.PositiveIntegerField(null=True)
+    maximum_stock_level = models.PositiveIntegerField(null=True)
     availability = models.BooleanField(default=True)
    
 
@@ -88,7 +89,7 @@ class Product(models.Model):
 
     # additional information
     product_use = models.TextField(blank=True)
-    maintainance_details = models.TextField(blank=True, null=True)
+    maintenance_details = models.TextField(blank=True, null=True)
     privacy_policy = models.TextField(blank=True, null=True)
 
     # seo info
