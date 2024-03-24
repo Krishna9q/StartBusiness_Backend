@@ -35,7 +35,7 @@ class ProductDetailsSerializer(serializers.ModelSerializer):
 class ProductPricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product       
-        fields = ['price', 'discount','offer_type', 'discount_price','discount_price_start','discount_price_end','min_order_quantity','bulk_quantity_pricing','bulk_discount','tax_class', 'tax_code','counter' ]
+        fields = ['price', 'discount','offer_type', 'discount_price','discount_price_start','discount_price_end','min_order_quantity','bulk_quantity_pricing','bulk_discount','tax_rate', 'hsn_code','counter' ]
 
 
 

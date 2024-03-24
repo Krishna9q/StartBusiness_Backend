@@ -69,8 +69,8 @@ class Product(models.Model):
 
     # Fields from TaxInformation
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2,null=True)
-    tax_code = models.CharField(max_length=20,blank=True,null=True)
-    tax_class = models.CharField(max_length=225,blank=True,null=True)
+    hsn_code = models.CharField(max_length=20,blank=True,null=True)
+  
 
     # Fields from Inventory
     minimum_stock_level = models.PositiveIntegerField(null=True)
