@@ -29,13 +29,13 @@ class ProductDetailsSerializer(serializers.ModelSerializer):
     layout = serializers.ListField(required=False, allow_empty=True)
     class Meta:
         model = Product 
-        fields = ['length','width','thickness','weight', 'color', 'material', 'style_design', 'surface_finish', 'edge_type','sq_ft_box', 'no_of_pcs_box','product_collections','label','layout','counter']
+        fields = ['length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit', 'color', 'material', 'style_design', 'surface_finish', 'edge_type','sq_ft_box', 'no_of_pcs_box','product_collections','label','layout','counter']
 
 
 class ProductPricingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product       
-        fields = ['price', 'discount','offer_type', 'discount_price','discount_price_start','discount_price_end','min_order_quantity','bulk_quantity_pricing','bulk_discount','tax_class','tax_rate', 'tax_code','counter' ]
+        fields = ['price', 'discount','offer_type', 'discount_price','discount_price_start','discount_price_end','min_order_quantity','bulk_quantity_pricing','bulk_discount','tax_class', 'tax_code','counter' ]
 
 
 
