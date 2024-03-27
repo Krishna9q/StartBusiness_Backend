@@ -26,6 +26,7 @@ urlpatterns = [
              path('brand/',include('brand.urls')),
              path('dealer/',include('dealer.urls')),
              path('product/',include('product.urls')),
+             path('product-highlight/',include('product_highlight.urls')),
              
              
        ]))
