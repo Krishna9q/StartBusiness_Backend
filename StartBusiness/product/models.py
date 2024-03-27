@@ -98,7 +98,7 @@ class Product(models.Model):
     meta_description = models.TextField(blank=True, null=True)
     featured_keywords = models.CharField(max_length=255,blank=True,null=True)
     long_tail_keywords = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length = 50, choices=(('Published', 'Published'),('Draft', 'Draft'),('Pending','Pending')),null=True)
+    status = models.CharField(max_length = 50, choices=(('Published', 'Published'),('Draft', 'Draft')),default='Draft')
     is_featured = models.BooleanField(default=False)
 
     
