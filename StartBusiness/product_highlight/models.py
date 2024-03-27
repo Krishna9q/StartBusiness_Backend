@@ -6,7 +6,7 @@ from product.models import Product
 class ProductHighlight(models.Model):
     product_highlight_id = models.UUIDField(primary_key=True, default=uuid.uuid4,editable=False)
     flash_deal = models.BooleanField(default=False)
-    discount_date = models.DateField()
+    discount_date = models.DateField(null=True)
     hot_deals = models.BooleanField(default=False)
     new = models.BooleanField(default=False)
     sale = models.BooleanField(default=False)
