@@ -128,6 +128,7 @@ class ProductMediaView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductMediaSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 2
             serializer.save()
             return Response({
              'status': 'success',
@@ -148,6 +149,7 @@ class ProductDetailsView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductDetailsSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 3
             serializer.save()
             return Response({
              'status': 'success',
@@ -170,6 +172,7 @@ class PricingView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductPricingSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 4
             serializer.save()
             return Response({
              'status': 'success',
@@ -189,6 +192,7 @@ class InventoryView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductInventorySerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 5
             serializer.save()
             return Response({
              'status': 'success',
@@ -210,6 +214,7 @@ class ProductVariantsView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductVariantsSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 6
             serializer.save()
             return Response({
              'status': 'success',
@@ -231,6 +236,7 @@ class ProductAdditionalView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = AdditionalInfoSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 7
             serializer.save()
             return Response({
              'status': 'success',
@@ -252,6 +258,7 @@ class SeoInformationView(GenericAPIView):
             product = Product.objects.get(product_id=_id)
             serializer = ProductSeoSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
+            serializer.validated_data['counter'] = 8
             serializer.save()
             return Response({
              'status': 'success',
