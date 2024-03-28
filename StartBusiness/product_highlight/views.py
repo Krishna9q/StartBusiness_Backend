@@ -25,7 +25,7 @@ class ProductHighlightUpdateView(APIView):
     def patch(self, request, input, format=None):
         id = input
         try:
-           product_highlight = ProductHighlight.objects.get(product_highlight_id=id)
+           product_highlight = ProductHighlight.objects.get(product=id)
            serializer = ProductHighlightSerializer(product_highlight, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
