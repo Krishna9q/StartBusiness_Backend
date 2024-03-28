@@ -15,6 +15,6 @@ class ProductHighlight(models.Model):
     top_rated = models.BooleanField(default=False)
     big_saving = models.BooleanField(default=False)
     trending = models.BooleanField(default=False)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE, default=uuid.uuid4)
+    product = models.OneToOneField(Product, default=uuid.uuid4, unique=True, on_delete=models.CASCADE)
     
 
