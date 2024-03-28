@@ -49,7 +49,7 @@ class ProductHighlightView(APIView):
         print(_id)
         if _id is not None:
             try:
-                product_highlight  = ProductHighlight.objects.get(product_highlight_id=_id)
+                product_highlight  = ProductHighlight.objects.get(product=_id)
                 serializer = ProductHighlightSerializer(product_highlight)
                 return Response(
                     {
