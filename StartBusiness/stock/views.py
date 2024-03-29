@@ -22,7 +22,7 @@ class StockAddView(GenericAPIView):
 # update stock
 class StockUpdateView(GenericAPIView):
     serializer_class = StockSerializer
-    def post(self, request, input):
+    def patch(self, request, input):
         id = input
         try:
            stock = Stock.objects.get(stock_id=id)
