@@ -20,7 +20,7 @@ class ProductHighlightAddView(GenericAPIView):
 
 
 # update product highlight
-class ProductHighlightUpdateView(APIView):
+class ProductHighlightUpdateView(GenericAPIView):
     serialier_class = ProductHighlightSerializer
     def patch(self, request, input, format=None):
         id = input

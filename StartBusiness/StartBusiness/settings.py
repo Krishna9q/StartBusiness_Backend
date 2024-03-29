@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'brand',
     'dealer',
     'product',
-    'product_highlight'
+    'product_highlight',
+    'stock'
    
 ]
 
