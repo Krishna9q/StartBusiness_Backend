@@ -30,3 +30,4 @@ class ForgetPasswordSerializer(serializers.ModelSerializer):
      class Meta:
         model = User
         fields = ['password']
+
