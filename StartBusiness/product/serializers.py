@@ -63,4 +63,3 @@ class ProductSeoSerializer(serializers.ModelSerializer):
         fields = ['product_url','meta_title','meta_description','featured_keywords','long_tail_keywords','status','is_featured','counter']
 
 
-

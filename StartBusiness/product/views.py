@@ -11,7 +11,8 @@ from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
+from category.models import Category
+from brand.models import Brand
 # register 01
 class ProductRegisterView(GenericAPIView):
     serializer_class = ProductSerializer
@@ -552,3 +553,251 @@ class SeoInfoAllView(APIView):
                  'message': "Product data retrieved successfully",
                  'data': serializer.data,
             }, status=200)
+
+
+# Bulk changes 
+class UpdateCategoriesInBulk(APIView):
+    def patch (self,request,format=None):
+        
+        # cid = request.query_paramss.get('category_id')
+        cid = request.data.get('category_id')
+        
+        try:
+            category = Category.objects.get(category_id=cid)
+        except Category.DoesNotExist:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "Category not found",
+                },
+                status=404
+            )
+
+        products = request.data.get('products', [])
+
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.category = category
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "Category updated successfully for all products ",
+            },
+            status=200
+        )
+
+class UpdateBrandsInBulk(APIView):
+    def patch (self,request,format=None):
+        
+        
+        bid = request.data.get('brand_id')
+        
+        try:
+            brand = Brand.objects.get(brand_id=bid)
+        except Brand.DoesNotExist:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "Brand not found",
+                },
+                status=404
+            )
+
+        products = request.data.get('products', [])
+
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.brand_id = brand
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "Brand updated successfully for all products ",
+            },
+            status=200
+        )
+
+class UpdateStatusInBulk(APIView):
+    def patch (self,request,format=None):
+        
+        
+        status = request.data.get('status')
+        
+        if status is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No Status provided",
+                },
+                status=400
+            )
+
+        products = request.data.get('products', [])
+
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.status = status
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "Status updated successfully for all products ",
+            },
+            status=200
+        )
+
+
+
+class UpdateCreatedAtInBulk(APIView):
+    def patch (self,request,format=None):
+        
+        
+        createdAt = request.data.get('createdAt')
+        
+        if createdAt is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No createdAt provided",
+                },
+                status=400
+            )
+
+        products = request.data.get('products', [])
+
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.created_at = createdAt
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "createdAt updated successfully for all products ",
+            },
+            status=200
+        )
+
+class UpdateIsFeaturedInBulk(APIView):
+    def patch (self,request,format=None):
+        
+        
+        isFeatured = request.data.get('isFeatured')
+        
+        if isFeatured is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No isFeatured provided",
+                },
+                status=400
+            )
+
+        products = request.data.get('products', [])
+
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.isFeatured = isFeatured
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "isFeatured updated successfully for all products ",
+            },
+            status=200
+        )
