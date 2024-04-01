@@ -21,7 +21,7 @@ class ProductHighlightAddView(GenericAPIView):
 
 # update product highlight
 class ProductHighlightUpdateView(GenericAPIView):
-    serialier_class = ProductHighlightSerializer
+    serializer_class = ProductHighlightSerializer
     def patch(self, request, input, format=None):
         id = input
         try:
@@ -32,7 +32,7 @@ class ProductHighlightUpdateView(GenericAPIView):
 
            return Response({
                 'status': status.HTTP_200_OK,
-                'message': 'Product Highlight Updated Successfully'  
+                'message': 'Product Highlight Updated Successfully'
                 },status=200)
         except ObjectDoesNotExist:
             return Response({

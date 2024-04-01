@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from product.models import Product
-
+from django.contrib.postgres.fields import ArrayField
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,4 +62,26 @@ class ProductSeoSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['product_url','meta_title','meta_description','featured_keywords','long_tail_keywords','status','is_featured','counter']
 
+class UpdateCategoryBrandInBulkSerializer(serializers.ModelSerializer):
+    product_id = serializers.ListField()
+    id = serializers.UUIDField(source='category')
+    
+
+    class Meta:
+        model = Product
+        fields = ['product_id','id']
+
+class UpdateStatusIsFeaturedSerializer(serializers.ModelSerializer):
+    product_id = serializers.ListField()
+    status = serializers.BooleanField(source='availability')
+    class Meta:
+        model = Product
+        fields = ['product_id','status']
+
+class UpdateCreatedAtSerializer(serializers.ModelSerializer):
+    product_id = serializers.ListField()
+    created_at = serializers.DateTimeField()
+    class Meta:
+        model = Product
+        fields=['product_id','created_at']
 

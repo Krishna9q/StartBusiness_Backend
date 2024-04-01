@@ -555,12 +555,14 @@ class SeoInfoAllView(APIView):
             }, status=200)
 
 
-# Bulk changes 
-class UpdateCategoriesInBulk(APIView):
+# update category in bulks  
+class UpdateCategoriesInBulk(GenericAPIView):
+    serializer_class = UpdateCategoryBrandInBulkSerializer
     def patch (self,request,format=None):
         
         # cid = request.query_paramss.get('category_id')
-        cid = request.data.get('category_id')
+        cid = request.data.get('id')
+        print(cid)
         
         try:
             category = Category.objects.get(category_id=cid)
@@ -572,9 +574,9 @@ class UpdateCategoriesInBulk(APIView):
                 },
                 status=404
             )
-
-        products = request.data.get('products', [])
-
+        serializer = UpdateCategoryBrandInBulkSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
         if not products:
             return Response(
                 {
@@ -605,15 +607,13 @@ class UpdateCategoriesInBulk(APIView):
             },
             status=200
         )
-
-class UpdateBrandsInBulk(APIView):
+# update brands in bulks
+class UpdateBrandsInBulk(GenericAPIView):
+    serializer_class = UpdateCategoryBrandInBulkSerializer
     def patch (self,request,format=None):
-        
-        
-        bid = request.data.get('brand_id')
-        
+        _id = request.data.get('id')
         try:
-            brand = Brand.objects.get(brand_id=bid)
+            brand = Brand.objects.get(brand_id=_id)
         except Brand.DoesNotExist:
             return Response(
                 {
@@ -622,9 +622,9 @@ class UpdateBrandsInBulk(APIView):
                 },
                 status=404
             )
-
-        products = request.data.get('products', [])
-
+        serializer = UpdateCategoryBrandInBulkSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
         if not products:
             return Response(
                 {
@@ -655,13 +655,11 @@ class UpdateBrandsInBulk(APIView):
             },
             status=200
         )
-
-class UpdateStatusInBulk(APIView):
+# update status in bulks
+class UpdateStatusInBulk(GenericAPIView):
+    serializer_class = UpdateStatusIsFeaturedSerializer
     def patch (self,request,format=None):
-        
-        
         status = request.data.get('status')
-        
         if status is None:
             return Response(
                 {
@@ -670,9 +668,9 @@ class UpdateStatusInBulk(APIView):
                 },
                 status=400
             )
-
-        products = request.data.get('products', [])
-
+        serializer = UpdateStatusIsFeaturedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
         if not products:
             return Response(
                 {
@@ -685,7 +683,7 @@ class UpdateStatusInBulk(APIView):
         for product_id in products:
             try:
                 product = Product.objects.get(product_id=product_id)
-                product.status = status
+                product.availability = status
                 product.save()
             except Product.DoesNotExist:
                 return Response(
@@ -695,7 +693,6 @@ class UpdateStatusInBulk(APIView):
                     },
                     status=404
                 )
-
         return Response(
             {
                 'status': 'success',
@@ -704,15 +701,12 @@ class UpdateStatusInBulk(APIView):
             status=200
         )
 
-
-
-class UpdateCreatedAtInBulk(APIView):
+# update created at in bulks
+class UpdateCreatedAtInBulk(GenericAPIView):
+    serializer_class = UpdateCreatedAtSerializer
     def patch (self,request,format=None):
-        
-        
-        createdAt = request.data.get('createdAt')
-        
-        if createdAt is None:
+        created_at= request.data.get('created_at')
+        if created_at is None:
             return Response(
                 {
                     'status': 'error',
@@ -720,9 +714,9 @@ class UpdateCreatedAtInBulk(APIView):
                 },
                 status=400
             )
-
-        products = request.data.get('products', [])
-
+        serializer = UpdateCreatedAtSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
         if not products:
             return Response(
                 {
@@ -731,11 +725,10 @@ class UpdateCreatedAtInBulk(APIView):
                 },
                 status=400
             )
-
         for product_id in products:
             try:
                 product = Product.objects.get(product_id=product_id)
-                product.created_at = createdAt
+                product.created_at = created_at
                 product.save()
             except Product.DoesNotExist:
                 return Response(
@@ -745,7 +738,6 @@ class UpdateCreatedAtInBulk(APIView):
                     },
                     status=404
                 )
-
         return Response(
             {
                 'status': 'success',
@@ -753,14 +745,12 @@ class UpdateCreatedAtInBulk(APIView):
             },
             status=200
         )
-
-class UpdateIsFeaturedInBulk(APIView):
+# update is featured in bulkd
+class UpdateIsFeaturedInBulk(GenericAPIView):
+    serializer_class = UpdateStatusIsFeaturedSerializer
     def patch (self,request,format=None):
-        
-        
-        isFeatured = request.data.get('isFeatured')
-        
-        if isFeatured is None:
+        is_featured = request.data.get('status')
+        if is_featured is None:
             return Response(
                 {
                     'status': 'error',
@@ -768,9 +758,9 @@ class UpdateIsFeaturedInBulk(APIView):
                 },
                 status=400
             )
-
-        products = request.data.get('products', [])
-
+        serializer = UpdateStatusIsFeaturedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
         if not products:
             return Response(
                 {
@@ -783,7 +773,7 @@ class UpdateIsFeaturedInBulk(APIView):
         for product_id in products:
             try:
                 product = Product.objects.get(product_id=product_id)
-                product.isFeatured = isFeatured
+                product.is_featured = is_featured
                 product.save()
             except Product.DoesNotExist:
                 return Response(
