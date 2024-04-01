@@ -685,7 +685,7 @@ class UpdateStatusInBulk(APIView):
         for product_id in products:
             try:
                 product = Product.objects.get(product_id=product_id)
-                product.status = status
+                product.availability = status
                 product.save()
             except Product.DoesNotExist:
                 return Response(
