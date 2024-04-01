@@ -791,3 +791,39 @@ class UpdateIsFeaturedInBulk(GenericAPIView):
             },
             status=200
         )
+
+class DeleteProductInBulkView(GenericAPIView):
+    
+    def delete(self, request, format=None):
+       
+        product_id = request.data.get('product_id')
+        print(type (product_id))
+
+        if not product_id:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No product id provided",
+                },
+                status=400
+            )
+        
+        for _id in product_id: 
+            try:
+                product = Product.objects.get(product_id=_id)
+                product.delete()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+         
+        return Response({
+            'status': status.HTTP_200_OK,
+             'message': 'Product Deleted Successfully' 
+            },
+            status=200)  
+   
