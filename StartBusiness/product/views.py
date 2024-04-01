@@ -822,7 +822,6 @@ class DeleteProductInBulkView(GenericAPIView):
             try:
                 product = Product.objects.get(product_id=_id)
                 product.delete()
-                product.save()
             except Product.DoesNotExist:
                 return Response(
                     {
