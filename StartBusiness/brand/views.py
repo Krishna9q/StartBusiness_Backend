@@ -14,6 +14,7 @@ from dealer.models import Dealer
 from rest_framework.parsers import BaseParser , JSONParser
 import json
 from dealer.serializers import DealerSerializer
+from django.core.exceptions import ObjectDoesNotExist
 # add brand
 class ListParser(BaseParser):
     def parse(self, stream, media_type=None, parser_context=None):
@@ -46,8 +47,10 @@ class BrandAllView(ListAPIView):
     filterset_class = BrandFilter
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        
-        
+        if response.data == []:
+            return Response({
+                "message":"No Data Found!!"
+            })
         return Response({
             'status':status.HTTP_200_OK,
             "message":'brand data retrieved successfully ',
@@ -57,12 +60,9 @@ class BrandAllView(ListAPIView):
 class BrandView(APIView):
     def get(self, request, input=None, format=None):
             _id = input
-      
-            if Brand.objects.filter(brand_id=_id).count() > 0:
+            try:
                 brand  = Brand.objects.get(brand_id=_id)
                 serializer = BrandSerializer(brand)
-
-
                 return Response(
                     {
                         'status': 'success',
@@ -70,8 +70,7 @@ class BrandView(APIView):
                         'data': serializer.data,
                     }, status=status.HTTP_200_OK
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
@@ -82,20 +81,20 @@ class BrandView(APIView):
   
     
 # update brand
-class UpdateBrandView(APIView):
+class UpdateBrandView(GenericAPIView):
+    serializer_class = BrandSerializer
     def patch(self, request, input, format=None):
        _id = input
-       if _id is not None:
+       try:
         brand = Brand.objects.get(brand_id=_id)
         serializer = BrandSerializer(brand, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        
         return Response({
              'status': 'success',
              'message': "brand updated successfully"
         },status=status.HTTP_200_OK)
-       else:
+       except ObjectDoesNotExist:
             return Response({
                 'status':'brand id not found'
         },status=status.HTTP_404_NOT_FOUND)
@@ -105,7 +104,8 @@ class UpdateBrandView(APIView):
 class DeleteBrandView(APIView):
     def delete(self, request, input, format=None):
         _id = input
-        if Brand.objects.filter(brand_id=_id).count() >= 1:
+        try:
+            print(_id)
             brand = Brand.objects.get(brand_id=_id)
             file = brand.brand_logo
             file = file.name
@@ -116,7 +116,7 @@ class DeleteBrandView(APIView):
              'message': 'Brand Deleted Successfully' 
             },
             status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
              'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid Brand_id',

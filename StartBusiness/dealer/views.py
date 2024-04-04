@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # add dealer
@@ -32,9 +32,13 @@ class DealerAllView(ListAPIView):
     filterset_class = DealerFilter
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
+        if response.data == []:
+            return Response({
+                "message":"No Data Found!!"
+            })
         return Response({
             'status':status.HTTP_200_OK,
-            "message":'dealer data retrieved successfully ',
+            "message":'dealer data retrieved successfully',
             'data':response.data
         },status=200)
 
@@ -42,12 +46,9 @@ class DealerAllView(ListAPIView):
 class DealerView(APIView):
     def get(self, request, input=None, format=None):
             _id = input
-      
-            if Dealer.objects.filter(dealer_id=_id).count() > 0:
+            try:
                 dealer  = Dealer.objects.get(dealer_id=_id)
                 serializer = DealerSerializer(dealer)
-
-
                 return Response(
                     {
                         'status': 'success',
@@ -55,8 +56,7 @@ class DealerView(APIView):
                         'data': serializer.data,
                     }, status=status.HTTP_200_OK
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
@@ -66,11 +66,11 @@ class DealerView(APIView):
                 )   
 
 # update dealer
-class UpdateDealerView(APIView):
+class UpdateDealerView(GenericAPIView):
     serializer_class = DealerSerializer
     def patch(self, request, input, format=None):
       _id = input
-      if Dealer.objects.filter(dealer_id=_id).count() >= 1:
+      try:
             print(_id)
             dealer = Dealer.objects.get(dealer_id=_id)
             serializer = DealerSerializer(dealer, data=request.data, partial=True)
@@ -80,7 +80,7 @@ class UpdateDealerView(APIView):
              'status': 'success',
              'message': "Dealer updated successfully"
         },status=200)
-      else:
+      except ObjectDoesNotExist:
             return Response({
                 'status':'Dealer id not found'
         },status=404)
@@ -90,7 +90,7 @@ class UpdateDealerView(APIView):
 class DeleteDealerView(APIView):
      def delete(self, request, input, format=None):
         _id = input
-        if Dealer.objects.filter(dealer_id=_id).count() >= 1:
+        try:
             dealer = Dealer.objects.get(dealer_id=_id)
             file = dealer.dealer_image
             file = file.name
@@ -101,7 +101,7 @@ class DeleteDealerView(APIView):
              'message': 'Dealer Deleted Successfully' 
             },
             status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
              'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid dealer_id',

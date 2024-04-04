@@ -11,6 +11,7 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
+from django.core.exceptions import ObjectDoesNotExist
 
 class CategoryRegisterView(GenericAPIView):
     serializer_class = CategorySerializer
@@ -21,7 +22,6 @@ class CategoryRegisterView(GenericAPIView):
         return Response({
             'status':status.HTTP_201_CREATED,
             "msg":'Category Registered',
-            'data': serializer.data
         },status=201)
 
 class CategoryView(ListAPIView):
@@ -31,8 +31,10 @@ class CategoryView(ListAPIView):
    
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
- 
-           
+        if response.data == []:
+            return Response({
+                "message":"No Data Found!!"
+            })
         return Response(
                {
                   'status': status.HTTP_200_OK,
@@ -44,8 +46,7 @@ class CategoryViewById(APIView):
     
     def get(self,request, input = None,format=None):
         id = input
-        
-        if Category.objects.filter(category_id=id).count()>=1:
+        try:
             category = Category.objects.get(category_id=id)
             serializer = CategorySerializer(category)
             return Response({
@@ -53,7 +54,7 @@ class CategoryViewById(APIView):
                 'message': "Category data retrived",
                 'data':serializer.data
             },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':status.HTTP_400_BAD_REQUEST,
                 'message': "Invalid Category id"
@@ -61,22 +62,20 @@ class CategoryViewById(APIView):
             status=400)
        
         
-class CategoryUpdateView(APIView):
-    serialier_class = CategorySerializer
+class CategoryUpdateView(GenericAPIView):
+    serializer_class = CategorySerializer
     def patch(self, request, input, format=None):
         id = input
-        if Category.objects.filter(category_id=id).count() >=1:
+        try:
            category = Category.objects.get(category_id=id)
            serializer = CategorySerializer(category, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
-
            return Response({
                 'status': status.HTTP_200_OK,
-                'data': serializer.data,
                 'message': 'category Updated Successfully'  
                 },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'invalid id',
@@ -87,7 +86,7 @@ class CategoryUpdateView(APIView):
 class CategoryDeleteView(APIView):
     def delete(self, request, input):
         id = input
-        if Category.objects.filter(category_id=id).count() >= 1:
+        try:
             category = Category.objects.get(category_id=id)
             file = category.category_image
             file = file.name
@@ -98,8 +97,7 @@ class CategoryDeleteView(APIView):
              'message': 'Category Deleted Successfully' 
             },
             status=200)
-        
-        else:
+        except ObjectDoesNotExist:
             return Response({
              'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid Category_id',

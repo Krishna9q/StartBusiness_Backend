@@ -29,7 +29,6 @@ class StockUpdateView(GenericAPIView):
            serializer = StockSerializer(stock, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
-
            return Response({
                 'status': status.HTTP_200_OK,
                 'message': 'Stock Updated Successfully'  

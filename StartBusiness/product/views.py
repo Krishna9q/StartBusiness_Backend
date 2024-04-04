@@ -11,6 +11,7 @@ from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from django.core.exceptions import ObjectDoesNotExist
 
 # register 01
 class ProductRegisterView(GenericAPIView):
@@ -22,9 +23,9 @@ class ProductRegisterView(GenericAPIView):
         serializer.save()
        
         return Response({
-            "status" :"success",
-            "message":"Product is added successfully",
-            "product_id":serializer.data['product_id'],
+            'status' :'success',
+            'message':'Product is added successfully',
+            'product_id':serializer.data['product_id'],
             # 'product_id':serializer
             }, status=201
   
@@ -41,11 +42,14 @@ class ProductAllView(ListAPIView):
     filterset_class = ProductFilter
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        
-        
+        if response.data == []:
+            return Response({
+                'status':status.HTTP_404_NOT_FOUND,
+                'message':'Data not found!!'
+            },status=400)
         return Response({
             'status':status.HTTP_200_OK,
-            "message":'product data retrieved successfully ',
+            'message':'product data retrieved successfully ',
             'data':response.data
         },status=200)
     
@@ -54,22 +58,21 @@ class ProductView(APIView):
     def get(self, request, input=None, format=None):
         _id = input
         print(_id)
-        if Product.objects.filter(product_id=_id).count() > 0:
+        try:
             product  = Product.objects.get(product_id=_id)
             serializer = ProductFullDetailsSerializer(product)
             return Response(
                 {
                     'status': 'success',
-                    'message': "Product data retrieved successfully",
+                    'message': 'Product data retrieved successfully',
                     'data': serializer.data,
                 }, status=200
             )
-        else:
-             
+        except ObjectDoesNotExist:
             return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
         )
@@ -80,17 +83,16 @@ class UpdateProductView(APIView):
     serializer_class = ProductSerializer
     def patch(self, request, input, format=None):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
-            print(_id)
+        try:
             product = Product.objects.get(product_id=_id)
             serializer = ProductSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -99,7 +101,7 @@ class UpdateProductView(APIView):
 class DeleteProductView(APIView):
     def delete(self, request, input, format=None):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
+        try:
             product = Product.objects.get(product_id=_id)
             product.delete()
             return Response({
@@ -107,7 +109,7 @@ class DeleteProductView(APIView):
              'message': 'Product Deleted Successfully' 
             },
             status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
              'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid product id',
@@ -123,8 +125,7 @@ class ProductMediaView(GenericAPIView):
     serializer_class = ProductMediaSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
-            print(_id)
+        try:
             product = Product.objects.get(product_id=_id)
             serializer = ProductMediaSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -132,9 +133,9 @@ class ProductMediaView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -144,8 +145,7 @@ class ProductDetailsView(GenericAPIView):
     serializer_class = ProductDetailsSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
-            print(_id)
+        try:
             product = Product.objects.get(product_id=_id)
             serializer = ProductDetailsSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -153,9 +153,9 @@ class ProductDetailsView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -167,8 +167,7 @@ class PricingView(GenericAPIView):
     serializer_class = ProductPricingSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
-            print(_id)
+        try:
             product = Product.objects.get(product_id=_id)
             serializer = ProductPricingSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -176,9 +175,9 @@ class PricingView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -187,7 +186,7 @@ class InventoryView(GenericAPIView):
     serializer_class = ProductInventorySerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
+        try:
             print(_id)
             product = Product.objects.get(product_id=_id)
             serializer = ProductInventorySerializer(product, data=request.data, partial=True)
@@ -196,9 +195,9 @@ class InventoryView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -209,7 +208,7 @@ class ProductVariantsView(GenericAPIView):
     serializer_class = ProductVariantsSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
+        try:
             print(_id)
             product = Product.objects.get(product_id=_id)
             serializer = ProductVariantsSerializer(product, data=request.data, partial=True)
@@ -218,9 +217,9 @@ class ProductVariantsView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -231,8 +230,7 @@ class ProductAdditionalView(GenericAPIView):
     serializer_class = AdditionalInfoSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
-            print(_id)
+        try:
             product = Product.objects.get(product_id=_id)
             serializer = AdditionalInfoSerializer(product, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -240,20 +238,19 @@ class ProductAdditionalView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
 
-# Seo info  update 
-        
+# Seo info update 
 class SeoInformationView(GenericAPIView):
     serializer_class = ProductSeoSerializer
     def patch(self,request ,input):
         _id = input
-        if Product.objects.filter(product_id=_id).count() >= 1:
+        try:
             print(_id)
             product = Product.objects.get(product_id=_id)
             serializer = ProductSeoSerializer(product, data=request.data, partial=True)
@@ -262,9 +259,9 @@ class SeoInformationView(GenericAPIView):
             serializer.save()
             return Response({
              'status': 'success',
-             'message': "Product updated successfully"
+             'message': 'Product updated successfully'
         },status=200)
-        else:
+        except ObjectDoesNotExist:
             return Response({
                 'status':'Product id not found'
         },status=404)
@@ -278,22 +275,21 @@ class BasicProductAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -302,7 +298,7 @@ class BasicProductAllView(APIView):
             serializer = ProductSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
 
@@ -314,22 +310,21 @@ class ProductMediaAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductMediaSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -338,7 +333,7 @@ class ProductMediaAllView(APIView):
             serializer = ProductMediaSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
         
@@ -350,31 +345,28 @@ class OtherDetailsAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductDetailsSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
-                    },
-                    status=404
-                )
+                        'message': 'Product not found',
+                    },status=404)
         else:
             product = Product.objects.all()    
             serializer = ProductDetailsSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
 
@@ -385,22 +377,21 @@ class PricingAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductPricingSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -409,7 +400,7 @@ class PricingAllView(APIView):
             serializer = ProductPricingSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
 
@@ -421,22 +412,21 @@ class ProductInventoryAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductInventorySerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -445,7 +435,7 @@ class ProductInventoryAllView(APIView):
             serializer = ProductInventorySerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
         
@@ -456,22 +446,21 @@ class ProductVariantsAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductVariantsSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -480,7 +469,7 @@ class ProductVariantsAllView(APIView):
             serializer = ProductVariantsSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
         
@@ -491,22 +480,21 @@ class AdditionalInfoAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = AdditionalInfoSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except  ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -515,7 +503,7 @@ class AdditionalInfoAllView(APIView):
             serializer = AdditionalInfoSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
         
@@ -525,22 +513,21 @@ class SeoInfoAllView(APIView):
         _id = input
         print(_id)
         if _id is not None:
-            if Product.objects.filter(product_id=_id).count() > 0:
+            try:
                 product  = Product.objects.get(product_id=_id)
                 serializer = ProductSeoSerializer(product)
                 return Response(
                     {
                         'status': 'success',
-                        'message': "Product data retrieved successfully",
+                        'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            else:
-             
+            except ObjectDoesNotExist:
                 return Response(
                     {
                         'status':  'error',
-                        'message': "Product not found",
+                        'message': 'Product not found',
                     },
                     status=404
                 )
@@ -549,6 +536,6 @@ class SeoInfoAllView(APIView):
             serializer = ProductSeoSerializer(product, many=True)
             return Response({
                  'status': 'success',
-                 'message': "Product data retrieved successfully",
+                 'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
