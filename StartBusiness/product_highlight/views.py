@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from product_highlight.models import ProductHighlight
 from product_highlight.serializers import ProductHighlightSerializer
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # add product highlight
 class ProductHighlightAddView(GenericAPIView):
@@ -34,12 +34,12 @@ class ProductHighlightUpdateView(GenericAPIView):
                 'status': status.HTTP_200_OK,
                 'message': 'Product Highlight Updated Successfully'  
                 },status=200)
-        except ProductHighlight.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-               'status': status.HTTP_404_NOT_FOUND,
+               'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'invalid_id',
                 },
-                status=404)
+                status=400)
 
 # get product highlight or get product highlight by id   
 class ProductHighlightView(APIView):
@@ -53,15 +53,15 @@ class ProductHighlightView(APIView):
                 serializer = ProductHighlightSerializer(product_highlight)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'product_highlight data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except ProductHighlight.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': "Product highlight not found",
                     },
                     status=404
@@ -70,7 +70,7 @@ class ProductHighlightView(APIView):
             product_highlight = ProductHighlight.objects.all()
             serializer = ProductHighlightSerializer(product_highlight, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'product_highlight data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -87,8 +87,8 @@ class ProductHighlightDeleteView(APIView):
                 'status': status.HTTP_200_OK,
                 'message': 'Product Highlight Deleted Successfully'
             })
-        except ProductHighlight.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status': status.HTTP_404_NOT_FOUND,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Invalid product_highlight_id'
-            }, status=404)
+            }, status=status.HTTP_400_BAD_REQUEST)

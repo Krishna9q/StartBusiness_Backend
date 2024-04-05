@@ -14,6 +14,7 @@ from dealer.models import Dealer
 from rest_framework.parsers import BaseParser , JSONParser
 import json
 from dealer.serializers import DealerSerializer
+from django.core.exceptions import ObjectDoesNotExist
 # add brand
 class ListParser(BaseParser):
     def parse(self, stream, media_type=None, parser_context=None):
@@ -29,9 +30,9 @@ class BrandAddView(GenericAPIView):
             serializer.save()
 
             return Response({
-            "status" :status.HTTP_201_CREATED,
+            "status" :"success",
             "message":"Brand is added successfully",
-            }, status=201
+            }, status=status.HTTP_201_CREATED
             )
 
 
@@ -48,9 +49,8 @@ class BrandAllView(ListAPIView):
         response = super().list(request, *args, **kwargs)
         if response.data == []:
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
                 "message":"No Data Found!!"
-            },status=404)
+            })
         return Response({
             'status':status.HTTP_200_OK,
             "message":'brand data retrieved successfully ',
@@ -65,18 +65,18 @@ class BrandView(APIView):
                 serializer = BrandSerializer(brand)
                 return Response(
                     {
-                        'status': status.HTTP_200_OK,
+                        'status': 'success',
                         'message': "brand " + 'data retrieved successfully',
                         'data': serializer.data,
-                    }, status=200
+                    }, status=status.HTTP_200_OK
                 )
-            except Brand.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status': status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': "brand not found",
                     },
-                    status=404
+                    status=status.HTTP_404_NOT_FOUND
                 )
   
     
@@ -91,14 +91,13 @@ class UpdateBrandView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
-             'status': status.HTTP_200_OK,
+             'status': 'success',
              'message': "brand updated successfully"
-        },status=200)
-       except Brand.DoesNotExist:
+        },status=status.HTTP_200_OK)
+       except ObjectDoesNotExist:
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
-                'message':'brand id not found'
-        },status=404)
+                'status':'brand id not found'
+        },status=status.HTTP_404_NOT_FOUND)
      
        
 # delete brand
@@ -117,12 +116,12 @@ class DeleteBrandView(APIView):
              'message': 'Brand Deleted Successfully' 
             },
             status=200)
-        except Brand.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-             'status': status.HTTP_404_NOT_FOUND,
+             'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid Brand_id',
             },
-            status=404)
+            status=400)
     
 
 
@@ -139,7 +138,7 @@ class DealerViewAccordingBrand(GenericAPIView):
             dataa.append(data)
         dealers = DealerSerializer(dataa,many=True)
         return Response({
-            'status':status.HTTP_200_OK,
+            'status':'success',
             "message":"data retrives successfully",
             'data':dealers.data
         },status=200)

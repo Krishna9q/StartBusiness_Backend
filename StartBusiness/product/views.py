@@ -11,7 +11,7 @@ from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # register 01
 class ProductRegisterView(GenericAPIView):
@@ -23,7 +23,7 @@ class ProductRegisterView(GenericAPIView):
         serializer.save()
        
         return Response({
-            'status' :status.HTTP_201_CREATED,
+            'status' :'success',
             'message':'Product is added successfully',
             'product_id':serializer.data['product_id'],
             # 'product_id':serializer
@@ -46,7 +46,7 @@ class ProductAllView(ListAPIView):
             return Response({
                 'status':status.HTTP_404_NOT_FOUND,
                 'message':'Data not found!!'
-            },status=404)
+            },status=400)
         return Response({
             'status':status.HTTP_200_OK,
             'message':'product data retrieved successfully ',
@@ -63,15 +63,15 @@ class ProductView(APIView):
             serializer = ProductFullDetailsSerializer(product)
             return Response(
                 {
-                    'status': status.HTTP_200_OK,
+                    'status': 'success',
                     'message': 'Product data retrieved successfully',
                     'data': serializer.data,
                 }, status=200
             )
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -89,13 +89,12 @@ class UpdateProductView(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
-             'status': status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
     
 
@@ -110,12 +109,12 @@ class DeleteProductView(APIView):
              'message': 'Product Deleted Successfully' 
             },
             status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-             'status': status.HTTP_404_NOT_FOUND,
+             'status': status.HTTP_400_BAD_REQUEST,
              'message': 'invalid product id',
             },
-            status=404)
+            status=400)
    
         
 
@@ -133,13 +132,12 @@ class ProductMediaView(GenericAPIView):
             serializer.validated_data['counter'] = 2
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
 
 # Product Details View
@@ -154,13 +152,12 @@ class ProductDetailsView(GenericAPIView):
             serializer.validated_data['counter'] = 3
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
 
 
@@ -177,13 +174,12 @@ class PricingView(GenericAPIView):
             serializer.validated_data['counter'] = 4
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
     # Product update inventory
 class InventoryView(GenericAPIView):
@@ -198,13 +194,12 @@ class InventoryView(GenericAPIView):
             serializer.validated_data['counter'] = 5
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
     
 
@@ -221,13 +216,12 @@ class ProductVariantsView(GenericAPIView):
             serializer.validated_data['counter'] = 6
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
 
 # Product additional information update
@@ -243,13 +237,12 @@ class ProductAdditionalView(GenericAPIView):
             serializer.validated_data['counter'] = 7
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
 
 # Seo info update 
@@ -265,13 +258,12 @@ class SeoInformationView(GenericAPIView):
             serializer.validated_data['counter'] = 8
             serializer.save()
             return Response({
-             'status' : status.HTTP_200_OK,
+             'status': 'success',
              'message': 'Product updated successfully'
         },status=200)
-        except Product.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response({
-                'status' : status.HTTP_404_NOT_FOUND,
-                'message':'Product id not found'
+                'status':'Product id not found'
         },status=404)
        
     
@@ -288,15 +280,15 @@ class BasicProductAllView(APIView):
                 serializer = ProductSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -305,7 +297,7 @@ class BasicProductAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -323,15 +315,15 @@ class ProductMediaAllView(APIView):
                 serializer = ProductMediaSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -340,7 +332,7 @@ class ProductMediaAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductMediaSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -358,22 +350,22 @@ class OtherDetailsAllView(APIView):
                 serializer = ProductDetailsSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },status=404)
         else:
             product = Product.objects.all()    
             serializer = ProductDetailsSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -390,15 +382,15 @@ class PricingAllView(APIView):
                 serializer = ProductPricingSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -407,7 +399,7 @@ class PricingAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductPricingSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -425,15 +417,15 @@ class ProductInventoryAllView(APIView):
                 serializer = ProductInventorySerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -442,7 +434,7 @@ class ProductInventoryAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductInventorySerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -459,15 +451,15 @@ class ProductVariantsAllView(APIView):
                 serializer = ProductVariantsSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -476,7 +468,7 @@ class ProductVariantsAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductVariantsSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -493,15 +485,15 @@ class AdditionalInfoAllView(APIView):
                 serializer = AdditionalInfoSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except  Product.DoesNotExist:
+            except  ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -510,7 +502,7 @@ class AdditionalInfoAllView(APIView):
             product = Product.objects.all()    
             serializer = AdditionalInfoSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -526,15 +518,15 @@ class SeoInfoAllView(APIView):
                 serializer = ProductSeoSerializer(product)
                 return Response(
                     {
-                        'status' : status.HTTP_200_OK,
+                        'status': 'success',
                         'message': 'Product data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except Product.DoesNotExist:
+            except ObjectDoesNotExist:
                 return Response(
                     {
-                        'status':  status.HTTP_404_NOT_FOUND,
+                        'status':  'error',
                         'message': 'Product not found',
                     },
                     status=404
@@ -543,7 +535,7 @@ class SeoInfoAllView(APIView):
             product = Product.objects.all()    
             serializer = ProductSeoSerializer(product, many=True)
             return Response({
-                 'status' : status.HTTP_200_OK,
+                 'status': 'success',
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
