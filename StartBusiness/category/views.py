@@ -11,7 +11,7 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
-from django.core.exceptions import ObjectDoesNotExist
+
 
 class CategoryRegisterView(GenericAPIView):
     serializer_class = CategorySerializer
@@ -54,9 +54,9 @@ class CategoryViewById(APIView):
                 'message': "Category data retrived",
                 'data':serializer.data
             },status=200)
-        except ObjectDoesNotExist:
+        except Category.DoesNotExist:
             return Response({
-                'status':status.HTTP_400_BAD_REQUEST,
+                'status':status.HTTP_404_NOT_FOUND,
                 'message': "Invalid Category id"
             },
             status=400)
@@ -75,9 +75,9 @@ class CategoryUpdateView(GenericAPIView):
                 'status': status.HTTP_200_OK,
                 'message': 'category Updated Successfully'  
                 },status=200)
-        except ObjectDoesNotExist:
+        except Category.DoesNotExist:
             return Response({
-               'status': status.HTTP_400_BAD_REQUEST,
+               'status': status.HTTP_404_NOT_FOUND,
                 'message': 'invalid id',
                 },
                 status=400)
@@ -97,9 +97,9 @@ class CategoryDeleteView(APIView):
              'message': 'Category Deleted Successfully' 
             },
             status=200)
-        except ObjectDoesNotExist:
+        except Category.DoesNotExist:
             return Response({
-             'status': status.HTTP_400_BAD_REQUEST,
+             'status': status.HTTP_404_NOT_FOUND,
              'message': 'invalid Category_id',
             },
             status=400)

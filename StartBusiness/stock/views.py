@@ -2,7 +2,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
-from django.core.exceptions import ObjectDoesNotExist
 from stock.models import Stock
 from stock.serializers import StockSerializer
 
@@ -33,12 +32,12 @@ class StockUpdateView(GenericAPIView):
                 'status': status.HTTP_200_OK,
                 'message': 'Stock Updated Successfully'  
                 },status=200)
-        except ObjectDoesNotExist:
+        except Stock.DoesNotExist:
             return Response({
-               'status': status.HTTP_400_BAD_REQUEST,
+               'status': status.HTTP_404_NOT_FOUND,
                 'message': 'invalid stock_id',
                 },
-                status=400)
+                status=404)
 
 # get stock or get stock by id   
 class StockView(APIView):
@@ -52,15 +51,15 @@ class StockView(APIView):
                 serializer = StockSerializer(stock)
                 return Response(
                     {
-                        'status': 'success',
+                        'status': status.HTTP_200_OK,
                         'message': 'stock data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
-            except ObjectDoesNotExist:
+            except Stock.DoesNotExist:
                 return Response(
                     {
-                        'status':  'error',
+                        'status':  status.HTTP_404_NOT_FOUND,
                         'message': "stock data not found",
                     },
                     status=404
@@ -69,7 +68,7 @@ class StockView(APIView):
             stock = Stock.objects.all()
             serializer = StockSerializer(stock, many=True)
             return Response({
-                 'status': 'success',
+                 'status': status.HTTP_200_OK,
                  'message': 'stock data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
@@ -85,9 +84,9 @@ class StockDeleteView(APIView):
             return Response({
                 'status': status.HTTP_200_OK,
                 'message': 'Stock Deleted Successfully'
-            })
-        except ObjectDoesNotExist:
+            },status=200)
+        except Stock.DoesNotExist:
             return Response({
-                'status': status.HTTP_400_BAD_REQUEST,
+                'status': status.HTTP_404_NOT_FOUND,
                 'message': 'Invalid stock_id'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_404_NOT_FOUND)
