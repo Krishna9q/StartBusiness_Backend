@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
-from django.core.exceptions import ObjectDoesNotExist
+
 
 
 # add dealer
@@ -19,7 +19,7 @@ class DealerAddView(GenericAPIView):
             serializer.save()
          
             return Response({
-            "status" :"success",
+            "status" :status.HTTP_201_CREATED,
             "message":"Dealer is added successfully",
             }, status=201
             )
@@ -34,8 +34,9 @@ class DealerAllView(ListAPIView):
         response = super().list(request, *args, **kwargs)
         if response.data == []:
             return Response({
+                'status':status.HTTP_404_NOT_FOUND,
                 "message":"No Data Found!!"
-            })
+            },status=404)
         return Response({
             'status':status.HTTP_200_OK,
             "message":'dealer data retrieved successfully',
@@ -51,18 +52,18 @@ class DealerView(APIView):
                 serializer = DealerSerializer(dealer)
                 return Response(
                     {
-                        'status': 'success',
+                        'status': status.HTTP_200_OK,
                         'message': "dealer " + 'data retrieved successfully',
                         'data': serializer.data,
-                    }, status=status.HTTP_200_OK
+                    }, status=200
                 )
-            except ObjectDoesNotExist:
+            except Dealer.DoesNotExist:
                 return Response(
                     {
-                        'status':  'error',
+                        'status':  status.HTTP_404_NOT_FOUND,
                         'message': "dealer not found",
                     },
-                    status=status.HTTP_404_NOT_FOUND
+                    status=404
                 )   
 
 # update dealer
@@ -77,12 +78,13 @@ class UpdateDealerView(GenericAPIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({
-             'status': 'success',
+             'status' : status.HTTP_200_OK,
              'message': "Dealer updated successfully"
         },status=200)
-      except ObjectDoesNotExist:
+      except Dealer.DoesNotExist:
             return Response({
-                'status':'Dealer id not found'
+                 'status':status.HTTP_404_NOT_FOUND,
+                'message':'Dealer id not found'
         },status=404)
      
        
@@ -101,12 +103,12 @@ class DeleteDealerView(APIView):
              'message': 'Dealer Deleted Successfully' 
             },
             status=200)
-        except ObjectDoesNotExist:
+        except Dealer.DoesNotExist:
             return Response({
-             'status': status.HTTP_400_BAD_REQUEST,
+             'status': status.HTTP_404_NOT_FOUND,
              'message': 'invalid dealer_id',
             },
-            status=400)
+            status=404)
     
     
 
