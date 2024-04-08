@@ -11,8 +11,8 @@ from StartBusiness.custom_paginations import CustomPagination
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-
-
+from category.models import Category
+from brand.models import Brand
 # register 01
 class ProductRegisterView(GenericAPIView):
     serializer_class = ProductSerializer
@@ -546,3 +546,277 @@ class SeoInfoAllView(APIView):
                  'message': 'Product data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
+
+
+# update category in bulks  
+class UpdateCategoriesInBulk(GenericAPIView):
+    serializer_class = UpdateCategoryBrandInBulkSerializer
+    def patch (self,request,format=None):
+        
+        # cid = request.query_paramss.get('category_id')
+        cid = request.data.get('id')
+        print(cid)
+        
+        try:
+            category = Category.objects.get(category_id=cid)
+        except Category.DoesNotExist:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "Category not found",
+                },
+                status=404
+            )
+        serializer = UpdateCategoryBrandInBulkSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.category = category
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "Category updated successfully for all products ",
+            },
+            status=200
+        )
+# update brands in bulks
+class UpdateBrandsInBulk(GenericAPIView):
+    serializer_class = UpdateCategoryBrandInBulkSerializer
+    def patch (self,request,format=None):
+        _id = request.data.get('id')
+        try:
+            brand = Brand.objects.get(brand_id=_id)
+        except Brand.DoesNotExist:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "Brand not found",
+                },
+                status=404
+            )
+        serializer = UpdateCategoryBrandInBulkSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.brand_id = brand
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "Brand updated successfully for all products ",
+            },
+            status=200
+        )
+# update status in bulks
+class UpdateStatusInBulk(GenericAPIView):
+    serializer_class = UpdateStatusIsFeaturedSerializer
+    def patch (self,request,format=None):
+        status = request.data.get('status')
+        if status is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No Status provided",
+                },
+                status=400
+            )
+        serializer = UpdateStatusIsFeaturedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.availability = status
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+        return Response(
+            {
+                'status': 'success',
+                'message': "Status updated successfully for all products ",
+            },
+            status=200
+        )
+
+# update created at in bulks
+class UpdateCreatedAtInBulk(GenericAPIView):
+    serializer_class = UpdateCreatedAtSerializer
+    def patch (self,request,format=None):
+        created_at= request.data.get('created_at')
+        if created_at is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No createdAt provided",
+                },
+                status=400
+            )
+        serializer = UpdateCreatedAtSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.created_at = created_at
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+        return Response(
+            {
+                'status': 'success',
+                'message': "createdAt updated successfully for all products ",
+            },
+            status=200
+        )
+# update is featured in bulkd
+class UpdateIsFeaturedInBulk(GenericAPIView):
+    serializer_class = UpdateStatusIsFeaturedSerializer
+    def patch (self,request,format=None):
+        is_featured = request.data.get('status')
+        if is_featured is None:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No isFeatured provided",
+                },
+                status=400
+            )
+        serializer = UpdateStatusIsFeaturedSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        products = serializer.data.get('product_id')
+        if not products:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No products provided",
+                },
+                status=400
+            )
+
+        for product_id in products:
+            try:
+                product = Product.objects.get(product_id=product_id)
+                product.is_featured = is_featured
+                product.save()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+
+        return Response(
+            {
+                'status': 'success',
+                'message': "isFeatured updated successfully for all products ",
+            },
+            status=200
+        )
+
+class DeleteProductInBulkView(GenericAPIView):
+    
+    def delete(self, request, format=None):
+       
+        product_id = request.data.get('product_id')
+        print(type (product_id))
+
+        if not product_id:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': "No product id provided",
+                },
+                status=400
+            )
+        
+        for _id in product_id: 
+            try:
+                product = Product.objects.get(product_id=_id)
+                product.delete()
+            except Product.DoesNotExist:
+                return Response(
+                    {
+                        'status': 'error',
+                        'message': f"No product found with this product id: {product_id}",
+                    },
+                    status=404
+                )
+         
+        return Response({
+            'status': status.HTTP_200_OK,
+             'message': 'Product Deleted Successfully' 
+            },
+            status=200)  
+   

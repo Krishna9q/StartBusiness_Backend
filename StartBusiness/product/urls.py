@@ -29,5 +29,12 @@ urlpatterns = [
     path('additionalInfo/view/',AdditionalInfoAllView.as_view(),name="get all additional info"),
     path('additionalInfo/view/<uuid:input>/',AdditionalInfoAllView.as_view(),name="get additional info by id"),
     path('seoInfo/view/',SeoInfoAllView.as_view(),name="get all SEO info"),
-    path('seoInfo/view/<uuid:input>/',SeoInfoAllView.as_view(),name="get SEO info by id") 
-]
+    path('seoInfo/view/<uuid:input>/',SeoInfoAllView.as_view(),name="get SEO info by id") ,
+    path('updateCategoriesInBulk/',UpdateCategoriesInBulk.as_view(),name="Update Categories InBulk"),
+    path('updateBrandInBulk/',UpdateBrandsInBulk.as_view(),name="Update Brand InBulk") ,
+    path('updateStatusInBulk/',UpdateStatusInBulk.as_view(),name="Update Status InBulk") ,
+    path('updateCreatedAtInBulk/',UpdateCreatedAtInBulk.as_view(),name="Update CreatedAt InBulk") ,
+    path('updateIsFeaturedInBulk/',UpdateIsFeaturedInBulk.as_view(),name="Update isFeatured InBulk") ,
+    path('deleteProductsInBulk/',DeleteProductInBulkView.as_view(),name="Delete Products InBulk") 
+    
+    ]   

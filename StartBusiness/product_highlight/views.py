@@ -33,7 +33,7 @@ class ProductHighlightUpdateView(GenericAPIView):
 
            return Response({
                 'status': status.HTTP_200_OK,
-                'message': 'Product Highlight Updated Successfully'  
+                'message': 'Product Highlight Updated Successfully'
                 },status=200)
         except ProductHighlight.DoesNotExist:
             return Response({
