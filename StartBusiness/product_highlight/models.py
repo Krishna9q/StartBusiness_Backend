@@ -10,6 +10,7 @@ class ProductHighlight(models.Model):
     hot_deals = models.BooleanField(default=False)
     new = models.BooleanField(default=False)
     sale = models.BooleanField(default=False)
+    offer = models.BooleanField(default=False)
     best_seller = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     top_rated = models.BooleanField(default=False)
