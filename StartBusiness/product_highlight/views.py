@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListAPIView
-from product.filter import ProductHighlightFilter
+from product_highlight.filter import ProductHighlightFilter
 from product.models import Product
 from product.serializers import ProductFullDetailsSerializer
 from product_highlight.models import ProductHighlight
