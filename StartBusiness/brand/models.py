@@ -9,6 +9,7 @@ class Brand(models.Model):
     brand_name = models.CharField(max_length=225, unique=True)
     brand_logo = models.ImageField(upload_to='brand/',null=True)
     is_active = models.BooleanField(default=True)
+    description = models.TextField(blank=True)
     category = models.ForeignKey(Category,default=uuid.uuid4,on_delete=models.CASCADE)
     # dealer = models.ForeignKey(Dealer,default=uuid.uuid4,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

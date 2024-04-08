@@ -13,7 +13,7 @@ class Product(models.Model):
     # basic info
     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE, default=uuid.uuid4)
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE, default=uuid.uuid4)
     sku = models.CharField(max_length=8,default=''.join(random.choices(string.ascii_uppercase, k=3))+''.join(random.choices(string.digits, k=5)))
