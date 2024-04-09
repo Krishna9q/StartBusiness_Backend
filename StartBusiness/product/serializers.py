@@ -89,4 +89,4 @@ class UpdateCreatedAtSerializer(serializers.ModelSerializer):
 class ProductCartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['product_id','name','length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit','price','discount','discount_price']
+        fields = ['product_id','name','image','length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit','price','discount','discount_price']
