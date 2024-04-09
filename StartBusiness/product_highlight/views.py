@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListAPIView
 from product_highlight.filter import ProductHighlightFilter
 from product.models import Product
-from product.serializers import ProductFullDetailsSerializer
+from product.serializers import ProductCartSerializer
 from product_highlight.models import ProductHighlight
 from product_highlight.serializers import ProductHighlightSerializer
 
@@ -47,7 +47,7 @@ class ProductHighlightUpdateView(GenericAPIView):
 # get product highlight   
 class ProductHighlightAllView(ListAPIView):
     queryset = Product.objects.all()
-    serializer_class = ProductFullDetailsSerializer
+    serializer_class = ProductCartSerializer
     filterset_class = ProductHighlightFilter
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
