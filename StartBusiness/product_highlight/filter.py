@@ -11,4 +11,4 @@ class ProductHighlightFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ['hot_deals','offer','trending','best_seller']
+        fields = ['hot_deals','offer','trending','best_seller','status']
