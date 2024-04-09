@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView , ListAPIView
+from category.filter import CategoryFilter
 from category.serializers import CategorySerializer
 from .models import Category
 from rest_framework.response import Response
@@ -28,6 +29,7 @@ class CategoryView(ListAPIView):
    queryset = Category.objects.all().order_by('-created_at')
    serializer_class = CategorySerializer
    pagination_class = CustomPagination
+   filterset_class = CategoryFilter
    
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
