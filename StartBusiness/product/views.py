@@ -35,23 +35,44 @@ class ProductRegisterView(GenericAPIView):
 # View Product Full
 class ProductAllView(ListAPIView):
     queryset = Product.objects.all()
-    filter_backends = [OrderingFilter, SearchFilter,DjangoFilterBackend]
-    pagination_class = CustomPagination
+    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
+    pagination_class = CustomPagination  # CustomPagination should be defined
     serializer_class = ProductFullDetailsSerializer
-    search_fields = []
-    filterset_class = ProductFilter
+    search_fields = []  # Add search fields if needed
+    filterset_class = ProductFilter  # Custom filter class for additional filtering
+
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        if response.data == []:
+        category_ids = request.query_params.getlist('category_ids', [])
+        
+        if category_ids:
+            # Filter queryset based on category IDs using DjangoFilterBackend
+            self.filterset_class = ProductFilter
+            self.filterset_class.Meta.fields = ['categories__id']
+            self.filterset_class.Meta.model = Product
+
+            # Apply filters
+            queryset = self.filter_queryset(self.get_queryset())
+            queryset = queryset.filter(category__in=category_ids).distinct()
+
+            # Serialize filtered queryset
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+
+            if not data:
+                return Response({
+                    'status': status.HTTP_404_NOT_FOUND,
+                    'message': 'No products found with the specified category IDs.'
+                }, status=status.HTTP_404_NOT_FOUND)
+
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
-                'message':'Data not found!!'
-            },status=404)
-        return Response({
-            'status':status.HTTP_200_OK,
-            'message':'product data retrieved successfully ',
-            'data':response.data
-        },status=200)
+                'status': status.HTTP_200_OK,
+                'message': 'Products filtered by category IDs successfully.',
+                'data': data
+            }, status=status.HTTP_200_OK)
+
+        # If no category IDs provided, return all products
+        return super().list(request, *args, **kwargs)
+
     
 
 class ProductView(APIView):
@@ -819,4 +840,3 @@ class DeleteProductInBulkView(GenericAPIView):
              'message': 'Product Deleted Successfully' 
             },
             status=200)  
-   
