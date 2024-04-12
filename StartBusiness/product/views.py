@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView,ListAPIView
 from rest_framework.response import Response
@@ -35,43 +36,44 @@ class ProductRegisterView(GenericAPIView):
 # View Product Full
 class ProductAllView(ListAPIView):
     queryset = Product.objects.all()
-    filter_backends = [OrderingFilter, SearchFilter, DjangoFilterBackend]
-    pagination_class = CustomPagination  # CustomPagination should be defined
     serializer_class = ProductFullDetailsSerializer
-    search_fields = []  # Add search fields if needed
-    filterset_class = ProductFilter  # Custom filter class for additional filtering
+    pagination_class = CustomPagination
+    filterset_class = ProductFilter
 
     def list(self, request, *args, **kwargs):
-        category_ids = request.query_params.getlist('category_ids', [])
-        
+        category_ids_str = request.query_params.get('category_ids', '')
+        category_ids = []
+        for category_id in category_ids_str.split(','):
+            try:
+                category_uuid = uuid.UUID(category_id.strip())
+                category_ids.append(category_uuid)
+            except ValueError:
+                pass
+
         if category_ids:
-            # Filter queryset based on category IDs using DjangoFilterBackend
-            self.filterset_class = ProductFilter
-            self.filterset_class.Meta.fields = ['categories__id']
-            self.filterset_class.Meta.model = Product
-
-            # Apply filters
-            queryset = self.filter_queryset(self.get_queryset())
-            queryset = queryset.filter(category__in=category_ids).distinct()
-
-            # Serialize filtered queryset
+            print(category_ids)
+            queryset = self.get_queryset().filter(category__in=category_ids).distinct()
             serializer = self.get_serializer(queryset, many=True)
             data = serializer.data
 
             if not data:
                 return Response({
-                    'status': status.HTTP_404_NOT_FOUND,
+                    'status': 404,
                     'message': 'No products found with the specified category IDs.'
-                }, status=status.HTTP_404_NOT_FOUND)
+                }, status=404)
 
             return Response({
-                'status': status.HTTP_200_OK,
+                'status': 200,
                 'message': 'Products filtered by category IDs successfully.',
                 'data': data
-            }, status=status.HTTP_200_OK)
+            }, status=200)
+        response = super().list(request, *args, **kwargs)
 
-        # If no category IDs provided, return all products
-        return super().list(request, *args, **kwargs)
+        return Response({
+                'status': 200,
+                'message': 'Products retrieved successfully.',
+                'data': response.data
+            }, status=200)
 
     
 
