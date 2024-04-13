@@ -28,6 +28,7 @@ urlpatterns = [
              path('product/',include('product.urls')),
              path('product-highlight/',include('product_highlight.urls')),
              path('stock/',include('stock.urls')),
+             path('address/',include('address.urls')),
              
              
        ]))
