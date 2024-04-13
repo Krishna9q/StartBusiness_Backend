@@ -1,3 +1,4 @@
+import uuid
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -50,17 +51,37 @@ class ProductHighlightAllView(ListAPIView):
     serializer_class = ProductCartSerializer
     filterset_class = ProductHighlightFilter
     def list(self, request, *args, **kwargs):
+        category_ids_str = request.query_params.get('category_ids', '')
+        category_ids = []
+        for category_id in category_ids_str.split(','):
+            try:
+                category_uuid = uuid.UUID(category_id.strip())
+                category_ids.append(category_uuid)
+            except ValueError:
+                pass
         response = super().list(request, *args, **kwargs)
-        if response.data == []:
+        best_seller = request.query_params.get('best_seller','')
+        if best_seller=='true':
+            if category_ids:
+                print(category_ids)
+                queryset = Product.objects.filter(producthighlight__best_seller=True,category__in=category_ids).distinct()
+                serializer = self.get_serializer(queryset, many=True)
+                data = serializer.data
+                return Response({
+                'status': 200,
+                'message': 'Products filtered by category IDs successfully.',
+                'data': data
+                }, status=200)
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
-                'message':'Data not found!!'
-            },status=404)
+                'status':status.HTTP_200_OK,
+                'message':'product highlight data retrieved successfully ',
+                'data':response.data
+            },status=200)
         return Response({
-            'status':status.HTTP_200_OK,
-            'message':'product highlight data retrieved successfully ',
-            'data':response.data
-        },status=200)
+                'status':status.HTTP_200_OK,
+                'message':'product highlight data retrieved successfully ',
+                'data':response.data
+            },status=200)
     
 #  get product highlight by id 
 class ProductHighlightView(APIView):

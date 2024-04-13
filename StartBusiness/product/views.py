@@ -41,39 +41,17 @@ class ProductAllView(ListAPIView):
     filterset_class = ProductFilter
 
     def list(self, request, *args, **kwargs):
-        category_ids_str = request.query_params.get('category_ids', '')
-        category_ids = []
-        for category_id in category_ids_str.split(','):
-            try:
-                category_uuid = uuid.UUID(category_id.strip())
-                category_ids.append(category_uuid)
-            except ValueError:
-                pass
-
-        if category_ids:
-            print(category_ids)
-            queryset = self.get_queryset().filter(category__in=category_ids).distinct()
-            serializer = self.get_serializer(queryset, many=True)
-            data = serializer.data
-
-            if not data:
-                return Response({
-                    'status': 404,
-                    'message': 'No products found with the specified category IDs.'
-                }, status=404)
-
-            return Response({
-                'status': 200,
-                'message': 'Products filtered by category IDs successfully.',
-                'data': data
-            }, status=200)
         response = super().list(request, *args, **kwargs)
-
+        if response.data == []:
+            return Response({
+                'status':status.HTTP_404_NOT_FOUND,
+                'message':'Data not found!!'
+            },status=404)
         return Response({
-                'status': 200,
-                'message': 'Products retrieved successfully.',
-                'data': response.data
-            }, status=200)
+            'status':status.HTTP_200_OK,
+            'message':'product data retrieved successfully ',
+            'data':response.data
+        },status=200)
 
     
 
