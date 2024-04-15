@@ -35,7 +35,7 @@ class ProductRegisterView(GenericAPIView):
 
 # View Product Full
 class ProductAllView(ListAPIView):
-    queryset = Product.objects.all().order_by('created_at')
+    queryset = Product.objects.all().order_by('-created_at')
     serializer_class = ProductFullDetailsSerializer
     pagination_class = CustomPagination
     filterset_class = ProductFilter

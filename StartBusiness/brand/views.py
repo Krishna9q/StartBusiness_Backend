@@ -37,7 +37,7 @@ class BrandAddView(GenericAPIView):
 
 # get all brands and get one brand by id
 class BrandAllView(ListAPIView):
-    queryset = Brand.objects.all().order_by('created_at')
+    queryset = Brand.objects.all().order_by('-created_at')
     filter_backends = [OrderingFilter, SearchFilter,DjangoFilterBackend]
     pagination_class = CustomPagination
     serializer_class = BrandSerializer
