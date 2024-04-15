@@ -35,11 +35,11 @@ class ProductRegisterView(GenericAPIView):
 
 # View Product Full
 class ProductAllView(ListAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('created_at')
     serializer_class = ProductFullDetailsSerializer
     pagination_class = CustomPagination
     filterset_class = ProductFilter
-
+    ordering_fields = ['created_at']
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         if response.data == []:
