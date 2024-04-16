@@ -22,9 +22,9 @@ class StockAddView(GenericAPIView):
 class StockUpdateView(GenericAPIView):
     serializer_class = StockSerializer
     def patch(self, request, input):
-        id = input
+        _id = input
         try:
-           stock = Stock.objects.get(stock_id=id)
+           stock = Stock.objects.get(stock_id=_id)
            serializer = StockSerializer(stock, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
@@ -78,8 +78,8 @@ class StockView(APIView):
 class StockDeleteView(APIView):
     def delete(self, request, input):
         try:
-            id = input
-            stock = Stock.objects.get(stock_id=id)
+            _id = input
+            stock = Stock.objects.get(stock_id=_id)
             stock.delete()
             return Response({
                 'status': status.HTTP_200_OK,
