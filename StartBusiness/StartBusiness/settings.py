@@ -206,7 +206,7 @@ REST_FRAMEWORK = {
 
 
 
-# AWS_CREDINTIALS
+#AWS_CREDINTIALS
 
 AWS_ACCESS_KEY_ID = 'AKIAYYNHA3KRGX66HUTL'
 AWS_SECRET_ACCESS_KEY = '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'
@@ -214,3 +214,21 @@ AWS_STORAGE_BUCKET_NAME = 'sangeetamarble'
 AWS_S3_REGION_NAME = 'ap-south-1'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# settings.py
+# from google.oauth2 import service_account
+    
+# # ...
+    
+# GS_BUCKET_NAME = "snagitamarble" 
+    
+# DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    
+# MEDIA_URL = "URL.to.GCS/"
+
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     "sunlit-virtue-415908-be8beac75bad.json"
+# )
+# GS_EXPIRATION = timedelta(minutes=5)
+    
+# GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
