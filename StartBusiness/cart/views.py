@@ -1,5 +1,6 @@
+from cart.filter import CartFilter
 from cart.models import Cart
-from cart.serializers import CartSerializer
+from cart.serializers import CartSerializer,CartViewSerializer,CartUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView , ListAPIView
@@ -19,8 +20,8 @@ class CartRegisterView(GenericAPIView):
 
 class CartView(ListAPIView):
    queryset = Cart.objects.all()
-   serializer_class = CartSerializer
-
+   serializer_class = CartViewSerializer
+   filterset_class = CartFilter
    
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -56,12 +57,12 @@ class CartViewById(APIView):
        
         
 class CartUpdateView(GenericAPIView):
-    serializer_class = CartSerializer
-    def patch(self, request, input, format=None):
+    serializer_class = CartUpdateSerializer
+    def post(self, request, input, format=None):
         _id = input
         try:
            cart = Cart.objects.get(cart_id=_id)
-           serializer = CartSerializer(cart, data=request.data, partial=True)
+           serializer = CartUpdateSerializer(cart, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
            return Response({

@@ -35,29 +35,29 @@ class Product(models.Model):
 
     # Fields from ProductDetails
     length = models.FloatField(null = True, blank=True)
-    length_unit = models.CharField( blank = True, max_length=255)
+    length_unit = models.CharField( blank = True, max_length=255,null=True)
     width = models.FloatField(null = True, blank=True)
-    width_unit = models.CharField( blank = True, max_length=255)
+    width_unit = models.CharField( blank = True, max_length=255,null=True)
     thickness = models.FloatField(null = True, blank=True)
-    thickness_unit = models.CharField(blank = True, max_length=255)
+    thickness_unit = models.CharField(blank = True, max_length=255,null=True)
     weight = models.FloatField(null = True, blank=True)
-    weight_unit = models.CharField(blank = True, max_length=255)
-    color = models.CharField(max_length=100,blank=True)
-    material = models.CharField(max_length=100,blank=True)
-    style_design = models.CharField(max_length=100,blank=True)
-    surface_finish = models.CharField(max_length=100,blank=True)
-    edge_type = models.CharField(max_length=100,blank=True)
+    weight_unit = models.CharField(blank = True, max_length=255,null=True)
+    color = models.CharField(max_length=100,blank=True,null=True)
+    material = models.CharField(max_length=100,blank=True,null=True)
+    style_design = models.CharField(max_length=100,blank=True,null=True)
+    surface_finish = models.CharField(max_length=100,blank=True,null=True)
+    edge_type = models.CharField(max_length=100,blank=True,null=True)
     sq_ft_box  = models.DecimalField(max_digits=10,null=True, decimal_places=2)
     no_of_pcs_box = models.IntegerField(blank=True,null=True)
-    product_collections = models.CharField(max_length=10000,blank=True)
-    label = models.CharField(max_length=10000,blank=True)
+    product_collections = models.CharField(max_length=10000,blank=True,null=True)
+    label = models.CharField(max_length=10000,blank=True,null=True)
     layout = ArrayField(models.CharField(max_length=10000),null=True)
 
 
       # Fields from Pricing
     price = models.DecimalField(max_digits=10,null=True, decimal_places=2)
     discount = models.FloatField(null = True, blank=True)
-    offer_type = models.CharField(max_length=255, blank=True)
+    offer_type = models.CharField(max_length=255, blank=True,null=True)
     discount = models.PositiveIntegerField(default=0,null=True)  # Percentage of
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     discount_price_start = models.DateTimeField(blank = True, null = True)
@@ -71,7 +71,7 @@ class Product(models.Model):
 
     # Fields from TaxInformation
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2,null=True)
-    hsn_code = models.CharField(max_length=20,blank=True)
+    hsn_code = models.CharField(max_length=20,blank=True,null=True)
   
 
     # Fields from Inventory
@@ -90,16 +90,16 @@ class Product(models.Model):
 
 
     # additional information
-    product_use = models.TextField(blank=True)
-    maintenance_details = models.TextField(blank=True)
-    privacy_policy = models.TextField(blank=True)
+    product_use = models.TextField(blank=True,null=True)
+    maintenance_details = models.TextField(blank=True,null=True)
+    privacy_policy = models.TextField(blank=True,null=True)
 
     # seo info
     product_url = models.URLField(blank=True, null=True)
-    meta_title = models.CharField(max_length=255,blank=True)
-    meta_description = models.TextField(blank=True)
-    featured_keywords = models.CharField(max_length=255,blank=True)
-    long_tail_keywords = models.TextField(blank=True)
+    meta_title = models.CharField(max_length=255,blank=True,null=True)
+    meta_description = models.TextField(blank=True,null=True)
+    featured_keywords = models.CharField(max_length=255,blank=True,null=True)
+    long_tail_keywords = models.TextField(blank=True,null=True)
     status = models.CharField(max_length = 50, choices=(('Published', 'Published'),('Draft', 'Draft')),default='Draft')
     is_featured = models.BooleanField(default=False)
 
