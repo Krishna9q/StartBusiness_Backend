@@ -58,7 +58,7 @@ class CartViewById(APIView):
         
 class CartUpdateView(GenericAPIView):
     serializer_class = CartUpdateSerializer
-    def post(self, request, input, format=None):
+    def patch(self, request, input, format=None):
         _id = input
         try:
            cart = Cart.objects.get(cart_id=_id)
