@@ -42,7 +42,7 @@ class CartViewById(APIView):
         _id = input
         try:
             cart = Cart.objects.get(cart_id=_id)
-            serializer = CartSerializer(cart)
+            serializer = CartViewSerializer(cart)
             return Response({
                 'status':status.HTTP_200_OK,
                 'message': "Cart data retrived",
