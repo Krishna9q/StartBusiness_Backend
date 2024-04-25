@@ -4,9 +4,9 @@ import uuid
 import imghdr
 import io
 import boto3
-from StartBusiness.settings import AWS_STORAGE_BUCKET_NAME
-from StartBusiness.settings import AWS_ACCESS_KEY_ID
-from StartBusiness.settings import AWS_SECRET_ACCESS_KEY
+# from StartBusiness.settings import AWS_STORAGE_BUCKET_NAME
+# from StartBusiness.settings import AWS_ACCESS_KEY_ID
+# from StartBusiness.settings import AWS_SECRET_ACCESS_KEY
 
 
 def get_file_extension(file_name, decoded_file):
