@@ -90,9 +90,9 @@ class CategoryDeleteView(APIView):
         id = input
         try:
             category = Category.objects.get(category_id=id)
-            file = category.category_image
-            file = file.name
-            delete_file(file)
+            # file = category.category_image
+            # file = file.name
+            # delete_file(file)
             category.delete()
             return Response({
             'status': status.HTTP_200_OK,
