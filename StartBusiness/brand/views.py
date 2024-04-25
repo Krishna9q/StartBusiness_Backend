@@ -108,9 +108,9 @@ class DeleteBrandView(APIView):
         try:
             print(_id)
             brand = Brand.objects.get(brand_id=_id)
-            file = brand.brand_logo
-            file = file.name
-            delete_file(file)
+            # file = brand.brand_logo
+            # file = file.name
+            # delete_file(file)
             brand.delete()
             return Response({
             'status': status.HTTP_200_OK,

@@ -94,9 +94,9 @@ class DeleteDealerView(APIView):
         _id = input
         try:
             dealer = Dealer.objects.get(dealer_id=_id)
-            file = dealer.dealer_image
-            file = file.name
-            delete_file(file)
+            # file = dealer.dealer_image
+            # file = file.name
+            # delete_file(file)
             dealer.delete()
             return Response({
             'status': status.HTTP_200_OK,
