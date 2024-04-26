@@ -14,6 +14,6 @@ ONBUILD RUN pip install --no-cache-dir -r requirements.txt
 
 ONBUILD COPY . /usr/src/app
 
-
+WORKDIR /usr/src/app/StartBusiness
 EXPOSE 8000
-CMD ["python", "app/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
